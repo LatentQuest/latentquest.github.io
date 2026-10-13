@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Get a Coupon · LatentQuest</title>
+  <meta name="description" content="Request a coupon for Master Transformers from Scratch: BERT, ViT & AI Search. Send a quick message on LinkedIn.">
+  <link rel="canonical" href="https://latentquest.github.io/coupon/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://latentquest.github.io/coupon/">
+  <meta property="og:title" content="Get a coupon for Transformers from Scratch">
+  <meta property="og:description" content="Send a quick message on LinkedIn and get a coupon for the course.">
+  <meta property="og:image" content="https://latentquest.github.io/assets/img/og-cover.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="nav is-scrolled">
+    <div class="container nav__inner">
+      <a class="brand" href="../" aria-label="Home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect x="2" y="2" width="12" height="12" rx="3"/><rect x="18" y="2" width="12" height="12" rx="3" class="dim"/><rect x="2" y="18" width="12" height="12" rx="3" class="dim"/><rect x="18" y="18" width="12" height="12" rx="3" class="hot"/></svg>
+        </span>
+        <span class="brand__text">LatentQuest</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../#course">Courses</a>
+        <a href="../#demo">Try attention</a>
+        <a href="../#code">Free code</a>
+        <a href="../#instructors">Instructors</a>
+      </nav>
+      <div class="nav__actions">
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="coupon">
+    <div class="container coupon__inner">
+      <div>
+        <p class="kicker">Coupons</p>
+        <h1>Get a coupon for the course</h1>
+        <p class="section__lead">Send <span id="contact-name">Vahid</span> a short message on LinkedIn and you'll get a coupon for <strong id="course-name">the course</strong>. This page writes the message for you.</p>
+        <ol class="steps">
+          <li><span><strong>Pick the course</strong> and add a line about yourself if you like.</span></li>
+          <li><span><strong>Click "Copy message &amp; open LinkedIn".</strong> The message is copied for you.</span></li>
+          <li><span>On the LinkedIn profile, click <strong>Message</strong> and paste. Not connected yet? Click <strong>Connect → Add a note</strong> and paste it there.</span></li>
+        </ol>
+      </div>
+
+      <form class="form-card" id="coupon-form" novalidate>
+        <div class="field">
+          <label for="course">Course</label>
+          <select id="course"></select>
+        </div>
+        <div class="field">
+          <label for="about">A line about you <span class="field__hint">(optional)</span></label>
+          <input id="about" type="text" maxlength="120" placeholder="e.g. I'm an ML engineer moving into NLP">
+        </div>
+        <div class="field">
+          <label for="message">Your message</label>
+          <textarea id="message" spellcheck="true"></textarea>
+          <span class="field__hint" id="count"></span>
+        </div>
+        <div class="form-card__actions">
+          <button class="btn btn--primary" type="submit">
+            Copy message &amp; open LinkedIn
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <span class="toast" id="toast" role="status" aria-live="polite"></span>
+        </div>
+        <p class="coupon__alt">Prefer not to wait? <a id="enroll-link" href="#" target="_blank" rel="noopener">Enroll on Udemy now →</a></p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> LatentQuest</p>
+      <nav aria-label="Footer">
+        <a href="../">Home</a>
+        <a id="footer-linkedin" href="https://www.linkedin.com/in/seyedvahidmirnezami" target="_blank" rel="noopener">LinkedIn</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../assets/data/site.js"></script>
+  <script>
+    (() => {
+      "use strict";
+      const SITE = window.SITE;
+      const $ = (s) => document.querySelector(s);
+      const root = document.documentElement;
+      $("#theme-toggle").addEventListener("click", () => {
+        const next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+      $("#year").textContent = new Date().getFullYear();
+      $("#contact-name").textContent = SITE.couponContact.firstName;
+      $("#footer-linkedin").href = SITE.couponContact.linkedin;
+
+      // LinkedIn connection notes are limited to about 200 characters,
+      // so the default message stays short enough to fit one.
+      const NOTE_LIMIT = 200;
+      const live = SITE.courses.filter((c) => c.status !== "soon");
+      const params = new URLSearchParams(location.search);
+      const initial = live.find((c) => c.slug === params.get("course")) || live.find((c) => c.featured) || live[0];
+
+      const select = $("#course"), about = $("#about"), message = $("#message"), count = $("#count");
+      select.innerHTML = live.map((c) => `<option value="${c.slug}">${c.title}</option>`).join("");
+      select.value = initial.slug;
+
+      let edited = false;
+      const current = () => live.find((c) => c.slug === select.value);
+      const compose = () => {
+        const c = current();
+        const extra = about.value.trim();
+        return `Hi ${SITE.couponContact.firstName}! I found the LatentQuest course "${c.shortTitle || c.title}" and would love a coupon.` +
+          (extra ? ` ${extra.replace(/[.!]*$/, ".")}` : "") + " Thank you!";
+      };
+      const updateCount = () => {
+        const n = message.value.length;
+        count.textContent = n > NOTE_LIMIT
+          ? `${n} characters. That's fine for a message, but too long for a connection note (about ${NOTE_LIMIT}).`
+          : `${n} characters. Short enough for a message or a connection note.`;
+      };
+      const refresh = () => {
+        const c = current();
+        $("#course-name").textContent = c.title;
+        $("#enroll-link").href = c.url;
+        if (!edited) message.value = compose();
+        updateCount();
+      };
+      select.addEventListener("change", () => { history.replaceState(null, "", `?course=${select.value}`); refresh(); });
+      about.addEventListener("input", refresh);
+      message.addEventListener("input", () => { edited = true; updateCount(); });
+      refresh();
+
+      $("#coupon-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const toast = $("#toast");
+        // Open LinkedIn first so pop-up blockers treat it as part of the click.
+        // ("noopener" would make window.open return null, so detach the opener by hand.)
+        const tab = window.open(SITE.couponContact.linkedin, "_blank");
+        if (tab) tab.opener = null;
+        try {
+          await navigator.clipboard.writeText(message.value);
+          toast.textContent = "Copied! Paste it into a LinkedIn message.";
+        } catch (err) {
+          message.select();
+          toast.textContent = "Select the message above and copy it, then paste it on LinkedIn.";
+        }
+        if (!tab) location.href = SITE.couponContact.linkedin;
+      });
+    })();
+  </script>
+</body>
+</html>
