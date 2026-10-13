@@ -1,7 +1,7 @@
 # latentquest.github.io
 
 Source for [latentquest.github.io](https://latentquest.github.io/): the home of LatentQuest courses by
-[Seyed Vahid Mirnezami](https://seyedvahidmirnezami.github.io/) and [Mohammad R. Khalili Shoja](https://khalili65.github.io/).
+[Mohammad R. Khalili Shoja](https://khalili65.github.io/) and [Seyed Vahid Mirnezami](https://seyedvahidmirnezami.github.io/).
 
 Plain HTML, CSS and JavaScript, with no build step. Edit the files and push to `main`; GitHub Pages publishes it in about a minute.
 
