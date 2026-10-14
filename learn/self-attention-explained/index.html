@@ -131,6 +131,7 @@
 <h2 id="step-1-score-how-similar-is-each-pair-of-words">Step 1: Score (how similar is each pair of words?)</h2>
 <p>To measure how similar two vectors are, we use the <strong>dot product</strong>: multiply the numbers position by position, then add them up.</p>
 <ul><li>bank · bank = 1×1 + 0×0 + 1×1 + 0×0 = <strong>2</strong></li><li>bank · of = 1×0 + 0×1 + 1×0 + 0×1 = <strong>0</strong></li><li>bank · river = 1×1 + 0×1 + 1×0 + 0×0 = <strong>1</strong></li></ul>
+<figure class="lq-anim" data-anim="dot" aria-label="Step-by-step animation"></figure>
 <p>So "bank" is most similar to itself, then to "river", and has nothing in common with "of". Doing the same for every pair gives a 3×3 grid of <strong>scores</strong>:</p>
 <div class="table-wrap"><table><thead><tr><th></th><th>bank</th><th>of</th><th>river</th></tr></thead><tbody><tr><td><strong>bank</strong></td><td>2</td><td>0</td><td>1</td></tr><tr><td><strong>of</strong></td><td>0</td><td>2</td><td>1</td></tr><tr><td><strong>river</strong></td><td>1</td><td>1</td><td>2</td></tr></tbody></table></div>
 <p>Each row answers one question: <em>how similar is this word to every word in the sentence?</em></p>
@@ -139,6 +140,7 @@
 <ol><li>Raise <em>e</em> (about 2.718) to the power of each score.</li><li>Add the results.</li><li>Divide each result by that total.</li></ol>
 <p>For the "bank" row, with scores 2, 0, 1:</p>
 <div class="table-wrap"><table><thead><tr><th></th><th>Score</th><th><em>e</em><sup>score</sup></th><th>÷ 11.107</th></tr></thead><tbody><tr><td>bank</td><td>2</td><td>7.389</td><td><strong>0.665</strong></td></tr><tr><td>of</td><td>0</td><td>1.000</td><td><strong>0.090</strong></td></tr><tr><td>river</td><td>1</td><td>2.718</td><td><strong>0.245</strong></td></tr><tr><td><strong>Sum</strong></td><td></td><td>11.107</td><td><strong>1.000</strong></td></tr></tbody></table></div>
+<figure class="lq-anim" data-anim="softmax" aria-label="Step-by-step animation"></figure>
 <p>So "bank" puts <strong>66.5%</strong> of its focus on itself, <strong>24.5%</strong> on "river" and <strong>9%</strong> on "of". Softmax never gives exactly zero, and it widens the gap between high and low scores.</p>
 <p>Doing the same for every row gives the <strong>focus matrix</strong>, usually called <strong>A</strong>:</p>
 <div class="table-wrap"><table><thead><tr><th>Focus of…</th><th>on bank</th><th>on of</th><th>on river</th></tr></thead><tbody><tr><td><strong>bank</strong></td><td>0.665</td><td>0.090</td><td>0.245</td></tr><tr><td><strong>of</strong></td><td>0.090</td><td>0.665</td><td>0.245</td></tr><tr><td><strong>river</strong></td><td>0.212</td><td>0.212</td><td>0.576</td></tr></tbody></table></div>
@@ -149,6 +151,7 @@
 + 0.090 × [0, 1, 0, 1]      (of)
 + 0.245 × [1, 1, 0, 0]      (river)
 = [0.910, 0.335, 0.665, 0.090]</code></pre>
+<figure class="lq-anim" data-anim="mix" aria-label="Step-by-step animation"></figure>
 <p>The original "bank" was <code>[1, 0, 1, 0]</code>. Positions 2 and 4 were zero; now they're 0.335 and 0.090. <strong>That's information from "river" and "of" flowing into "bank."</strong> The new vector is no longer generic: it's specific to <em>this</em> sentence.</p>
 <p>Doing the same for all three words:</p>
 <div class="table-wrap"><table><thead><tr><th>Word</th><th>Before</th><th>After self-attention</th></tr></thead><tbody><tr><td>bank</td><td><code>[1, 0, 1, 0]</code></td><td><code>[0.910, 0.335, 0.665, 0.090]</code></td></tr><tr><td>of</td><td><code>[0, 1, 0, 1]</code></td><td><code>[0.335, 0.910, 0.090, 0.665]</code></td></tr><tr><td>river</td><td><code>[1, 1, 0, 0]</code></td><td><code>[0.788, 0.788, 0.212, 0.212]</code></td></tr></tbody></table></div>
@@ -228,5 +231,6 @@ print(Y.round(3))   # new bank: [0.91  0.335 0.665 0.09 ]</code></pre>
       document.getElementById("year").textContent = new Date().getFullYear();
     })();
   </script>
+  <script src="../../assets/js/article-anim.js" defer></script>
 </body>
 </html>

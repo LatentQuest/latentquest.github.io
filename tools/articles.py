@@ -19,6 +19,7 @@ It writes learn/<slug>/index.html for each article and the learn/index.html hub.
 Only the Python standard library is used. The Markdown subset supported:
 headings (## and ###), paragraphs, **bold**, *italic*, `code`, [links](url),
 bullet and numbered lists, pipe tables, fenced code blocks and <sup>/<sub> tags.
+A line {{anim:NAME}} inserts an animation from assets/js/article-anim.js (dot, softmax, mix).
 """
 
 import html
@@ -83,6 +84,11 @@ def markdown(md):
             i += 1
             cls = f' class="language-{lang}"' if lang else ""
             out.append(f'<pre class="code"><code{cls}>{html.escape(chr(10).join(body))}</code></pre>')
+            continue
+        m = re.match(r"^\{\{anim:([a-z-]+)\}\}$", line.strip())
+        if m:
+            out.append(f'<figure class="lq-anim" data-anim="{m.group(1)}" aria-label="Step-by-step animation"></figure>')
+            i += 1
             continue
         m = re.match(r"^(#{2,3})\s+(.*)$", line)
         if m:
@@ -198,7 +204,7 @@ def head(title, description, url, prefix, extra_ld, og_type="article"):
 """
 
 
-def foot(prefix):
+def foot(prefix, scripts=""):
     return f"""
   <footer class="footer">
     <div class="container footer__inner">
@@ -221,7 +227,7 @@ def foot(prefix):
       }});
       document.getElementById("year").textContent = new Date().getFullYear();
     }})();
-  </script>
+  </script>{scripts}
 </body>
 </html>
 """
@@ -288,7 +294,7 @@ def article_page(a):
       </aside>
     </div>
   </main>
-""" + foot(prefix)
+""" + foot(prefix, (f'\n  <script src="{prefix}assets/js/article-anim.js" defer></script>' if 'class="lq-anim"' in a["body"] else ""))
 
 
 def hub_page(articles):

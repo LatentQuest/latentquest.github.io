@@ -39,6 +39,8 @@ To measure how similar two vectors are, we use the **dot product**: multiply the
 - bank · of = 1×0 + 0×1 + 1×0 + 0×1 = **0**
 - bank · river = 1×1 + 0×1 + 1×0 + 0×0 = **1**
 
+{{anim:dot}}
+
 So "bank" is most similar to itself, then to "river", and has nothing in common with "of". Doing the same for every pair gives a 3×3 grid of **scores**:
 
 | | bank | of | river |
@@ -66,6 +68,8 @@ For the "bank" row, with scores 2, 0, 1:
 | river | 1 | 2.718 | **0.245** |
 | **Sum** | | 11.107 | **1.000** |
 
+{{anim:softmax}}
+
 So "bank" puts **66.5%** of its focus on itself, **24.5%** on "river" and **9%** on "of". Softmax never gives exactly zero, and it widens the gap between high and low scores.
 
 Doing the same for every row gives the **focus matrix**, usually called **A**:
@@ -88,6 +92,8 @@ Each row of A is a **recipe** for a new vector. For "bank" it says: take 0.665 o
 + 0.245 × [1, 1, 0, 0]      (river)
 = [0.910, 0.335, 0.665, 0.090]
 ```
+
+{{anim:mix}}
 
 The original "bank" was `[1, 0, 1, 0]`. Positions 2 and 4 were zero; now they're 0.335 and 0.090. **That's information from "river" and "of" flowing into "bank."** The new vector is no longer generic: it's specific to *this* sentence.
 
