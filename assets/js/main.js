@@ -72,7 +72,7 @@
     const t = Math.min(1, Math.max(0, w));
     const hot = t > 0.5 ? "var(--amber)" : "var(--cyan)";
     const pct = Math.round(18 + t * 82);
-    const ink = t > 0.45 ? "#04121a" : "var(--text)";
+    const ink = t > 0.45 ? "#031326" : "var(--text)";
     return `background: color-mix(in srgb, ${hot} ${pct}%, var(--cell-low)); color: ${ink};`;
   };
 

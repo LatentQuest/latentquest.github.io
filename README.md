@@ -35,6 +35,20 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Brand kit
+
+Logo files live in [`assets/brand/`](assets/brand/):
+
+| File | Use |
+|---|---|
+| `latentquest-logo-original.png` | The original logo (white background) |
+| `latentquest-logo-horizontal.png` / `-dark.png` | Icon + name side by side, for light / dark backgrounds |
+| `latentquest-logo-stacked.png` / `-dark.png` | Icon above the name |
+| `latentquest-mark.png` | Icon only, transparent |
+| `profile-800x800.png`, `icon-512.png` | Profile pictures and app icons |
+
+Brand colors: blue `#0E90FB`, navy `#0D2442`, amber `#FCBA46`. On the site, the accent is `#4aa8ff` (dark theme) and `#0a6fd6` (light theme).
+
 ## Search engines
 
 `robots.txt` and `sitemap.xml` are at the site root. The sitemap is submitted in Google Search Console
