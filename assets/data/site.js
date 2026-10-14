@@ -11,6 +11,8 @@ window.SITE = {
     name: "LatentQuest",
     url: "https://latentquest.ai/",
     github: "LatentQuest",
+    // Brand social pages (also listed in index.html structured data and footer).
+    linkedin: "https://www.linkedin.com/company/latentquest",
   },
 
   // Coupon requests go to this person on LinkedIn.
