@@ -1,6 +1,6 @@
 # latentquest.github.io
 
-Source for [latentquest.github.io](https://latentquest.github.io/): the home of LatentQuest courses by
+Source for [latentquest.github.io](https://latentquest.ai/): the home of LatentQuest courses by
 [Mohammad R. Khalili Shoja](https://khalili65.github.io/) and [Seyed Vahid Mirnezami](https://seyedvahidmirnezami.github.io/).
 
 Plain HTML, CSS and JavaScript, with no build step. Edit the files and push to `main`; GitHub Pages publishes it in about a minute.
@@ -20,9 +20,9 @@ Coupon requests go to `couponContact` on LinkedIn.
 
 ## Coupon requests
 
-[`/coupon/`](https://latentquest.github.io/coupon/) writes a short coupon request, copies it, and opens LinkedIn.
+[`/coupon/`](https://latentquest.ai/coupon/) writes a short coupon request, copies it, and opens LinkedIn.
 Link to a specific course with `?course=<slug>`, for example
-`https://latentquest.github.io/coupon/?course=transformers`.
+`https://latentquest.ai/coupon/?course=transformers`.
 
 ## Preview locally
 

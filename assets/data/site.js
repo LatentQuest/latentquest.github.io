@@ -9,7 +9,7 @@
 window.SITE = {
   brand: {
     name: "LatentQuest",
-    url: "https://latentquest.github.io/",
+    url: "https://latentquest.ai/",
     github: "LatentQuest",
   },
 
