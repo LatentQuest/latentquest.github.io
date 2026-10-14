@@ -9,7 +9,7 @@
 window.SITE = {
   brand: {
     name: "LatentQuest",
-    url: "https://latentquest.github.io/",
+    url: "https://latentquest.ai/",
     github: "LatentQuest",
   },
 
@@ -19,18 +19,8 @@ window.SITE = {
     linkedin: "https://www.linkedin.com/in/seyedvahidmirnezami",
   },
 
+  // Display order: Mohammad first, then Vahid (used everywhere names appear together).
   instructors: [
-    {
-      name: "Seyed Vahid Mirnezami",
-      role: "Senior Computer Vision Scientist, Bayer Crop Science",
-      photo: "assets/img/people/vahid.jpg",
-      bio: "Deep learning, generative AI and vision–language models in production. Ph.D. from Iowa State University, with research on computer vision for high-throughput plant phenotyping.",
-      links: {
-        Website: "https://seyedvahidmirnezami.github.io/",
-        GitHub: "https://github.com/seyedvahidmirnezami",
-        LinkedIn: "https://www.linkedin.com/in/seyedvahidmirnezami",
-      },
-    },
     {
       name: "Mohammad R. Khalili Shoja",
       role: "Staff Data Scientist, Walmart Global Tech",
@@ -40,6 +30,17 @@ window.SITE = {
         Website: "https://khalili65.github.io/",
         GitHub: "https://github.com/khalili65",
         LinkedIn: "https://www.linkedin.com/in/mohammad-reza-khalili-shoja",
+      },
+    },
+    {
+      name: "Seyed Vahid Mirnezami",
+      role: "Senior Computer Vision Scientist, Bayer Crop Science",
+      photo: "assets/img/people/vahid.jpg",
+      bio: "Deep learning, generative AI and vision–language models in production. Ph.D. from Iowa State University, with research on computer vision for high-throughput plant phenotyping.",
+      links: {
+        Website: "https://seyedvahidmirnezami.github.io/",
+        GitHub: "https://github.com/seyedvahidmirnezami",
+        LinkedIn: "https://www.linkedin.com/in/seyedvahidmirnezami",
       },
     },
   ],
@@ -54,7 +55,7 @@ window.SITE = {
       tagline: "From vectors and attention math to BERT, Vision Transformers and two-tower semantic search.",
       url: "https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9",
       image: "assets/img/og-cover.jpg",
-      instructors: ["Seyed Vahid Mirnezami", "Mohammad R. Khalili Shoja"],
+      instructors: ["Mohammad R. Khalili Shoja", "Seyed Vahid Mirnezami"],
       tags: ["NLP", "Vision", "Search", "PyTorch"],
       sessionsLabel: "17 sessions",
       pillars: [

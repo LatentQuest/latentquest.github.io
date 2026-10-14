@@ -206,9 +206,12 @@
 
   /* ---------- Instructors ---------- */
   const people = SITE.instructors || [];
-  $("#taught-by").innerHTML = `<div class="taught-by__faces">${people.map((p) =>
+  // The hero card follows the featured course's own instructor order.
+  const teaching = (featured && featured.instructors || []).map((n) => people.find((p) => p.name === n)).filter(Boolean);
+  const heroPeople = teaching.length ? teaching : people;
+  $("#taught-by").innerHTML = `<div class="taught-by__faces">${heroPeople.map((p) =>
     `<img src="${p.photo}" alt="" width="40" height="40" loading="lazy">`).join("")}</div>
-    <p>Taught by <strong>${people.map((p) => p.name).join("</strong> &amp; <strong>")}</strong></p>`;
+    <p>Taught by <strong>${heroPeople.map((p) => p.name).join("</strong> &amp; <strong>")}</strong></p>`;
   $("#instructor-list").innerHTML = people.map((p) => `
     <article class="instructor reveal is-visible">
       <img class="instructor__photo" src="${p.photo}" alt="Portrait of ${p.name}" width="120" height="120" loading="lazy">
