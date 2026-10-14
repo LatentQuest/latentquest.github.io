@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Self-Attention Explained with Real Numbers · LatentQuest</title>
+  <meta name="description" content="How does a transformer know that &quot;bank&quot; means a riverbank? Compute self-attention by hand on a three-word example, step by step, with numbers you can check. No advanced math needed.">
+  <link rel="canonical" href="https://latentquest.ai/learn/self-attention-explained/">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://latentquest.ai/learn/self-attention-explained/">
+  <meta property="og:title" content="Self-Attention Explained with Real Numbers">
+  <meta property="og:description" content="How does a transformer know that &quot;bank&quot; means a riverbank? Compute self-attention by hand on a three-word example, step by step, with numbers you can check. No advanced math needed.">
+  <meta property="og:image" content="https://latentquest.ai/assets/img/og-latentquest-v2.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0a6fd6">
+  <link rel="icon" href="../../assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../../assets/img/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script>
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch (e) {}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "headline": "Self-Attention Explained with Real Numbers",
+      "description": "How does a transformer know that \"bank\" means a riverbank? Compute self-attention by hand on a three-word example, step by step, with numbers you can check. No advanced math needed.",
+      "datePublished": "2026-10-14",
+      "dateModified": "2026-10-14",
+      "url": "https://latentquest.ai/learn/self-attention-explained/",
+      "image": "https://latentquest.ai/assets/img/og-latentquest-v2.jpg",
+      "author": [
+        {
+          "@type": "Person",
+          "name": "Mohammad R. Khalili Shoja"
+        },
+        {
+          "@type": "Person",
+          "name": "Seyed Vahid Mirnezami"
+        }
+      ],
+      "publisher": {
+        "@type": "Organization",
+        "name": "LatentQuest",
+        "url": "https://latentquest.ai/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://latentquest.ai/assets/brand/icon-512.png"
+        }
+      },
+      "isAccessibleForFree": true,
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://latentquest.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Learn",
+          "item": "https://latentquest.ai/learn/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Self-Attention Explained with Real Numbers",
+          "item": "https://latentquest.ai/learn/self-attention-explained/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <header class="nav is-scrolled">
+    <div class="container nav__inner">
+      <a class="brand" href="../../" aria-label="Home">
+        <img class="brand__logo" src="../../assets/img/logo-tile-96.png" alt="" width="34" height="34">
+        <span class="brand__text">LatentQuest</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../../#course">Courses</a>
+        <a href="../../learn/">Learn</a>
+        <a href="../../#demo">Try attention</a>
+        <a href="../../#code">Free code</a>
+        <a href="../../#instructors">Instructors</a>
+      </nav>
+      <div class="nav__actions">
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+        </button>
+        <a class="btn btn--primary btn--sm nav__cta" href="https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9" target="_blank" rel="noopener">Enroll</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container article__layout">
+      <article class="article__main">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="../../">Home</a> / <a href="../../learn/">Learn</a> / <span>Transformers</span></nav>
+        <h1>Self-Attention Explained with Real Numbers</h1>
+        <p class="article__lead">How does a transformer know that &quot;bank&quot; means a riverbank? Compute self-attention by hand on a three-word example, step by step, with numbers you can check. No advanced math needed.</p>
+        <p class="article__meta">By Mohammad R. Khalili Shoja &amp; Seyed Vahid Mirnezami · 2026-10-14 · 9 min read · Sessions 1–2</p>
+        <div class="prose">
+<p>The word <strong>"bank"</strong> can mean the side of a river or a place that holds your money. You know which one from the words around it:</p>
+<ul><li>"I walked along the <strong>bank</strong> of the river."</li><li>"I deposited money at the <strong>bank</strong> on Monday."</li></ul>
+<p>A language model has the same problem. Every word starts as a list of numbers, called an <strong>embedding</strong>, and "bank" gets <strong>the same list of numbers in both sentences</strong>. Somehow the model has to update that vector so it reflects the words around it.</p>
+<p>That's what <strong>self-attention</strong> does. It's the core of every transformer: BERT, Vision Transformers and modern language models. And underneath, it's only three steps: <strong>score, normalize, mix</strong>.</p>
+<p>In this article we'll compute it by hand on a tiny example. If you can add and multiply, you can follow every number.</p>
+<h2 id="the-example-three-words-four-numbers-each">The example: three words, four numbers each</h2>
+<p>We'll use the phrase "bank of river". Each word gets a 4-number vector. Real models use hundreds of numbers learned from data; these are made-up toy values, small enough to check on paper:</p>
+<div class="table-wrap"><table><thead><tr><th>Word</th><th>Vector</th></tr></thead><tbody><tr><td>bank</td><td><code>[1, 0, 1, 0]</code></td></tr><tr><td>of</td><td><code>[0, 1, 0, 1]</code></td></tr><tr><td>river</td><td><code>[1, 1, 0, 0]</code></td></tr></tbody></table></div>
+<p><strong>The goal:</strong> produce three <em>new</em> vectors, one per word, where each one has absorbed some information from the others. We'd hope "bank" and "river" influence each other, and "of" mostly stays itself.</p>
+<h2 id="step-1-score-how-similar-is-each-pair-of-words">Step 1: Score (how similar is each pair of words?)</h2>
+<p>To measure how similar two vectors are, we use the <strong>dot product</strong>: multiply the numbers position by position, then add them up.</p>
+<ul><li>bank · bank = 1×1 + 0×0 + 1×1 + 0×0 = <strong>2</strong></li><li>bank · of = 1×0 + 0×1 + 1×0 + 0×1 = <strong>0</strong></li><li>bank · river = 1×1 + 0×1 + 1×0 + 0×0 = <strong>1</strong></li></ul>
+<p>So "bank" is most similar to itself, then to "river", and has nothing in common with "of". Doing the same for every pair gives a 3×3 grid of <strong>scores</strong>:</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>bank</th><th>of</th><th>river</th></tr></thead><tbody><tr><td><strong>bank</strong></td><td>2</td><td>0</td><td>1</td></tr><tr><td><strong>of</strong></td><td>0</td><td>2</td><td>1</td></tr><tr><td><strong>river</strong></td><td>1</td><td>1</td><td>2</td></tr></tbody></table></div>
+<p>Each row answers one question: <em>how similar is this word to every word in the sentence?</em></p>
+<h2 id="step-2-normalize-turn-scores-into-percentages">Step 2: Normalize (turn scores into percentages)</h2>
+<p>Raw scores can be any size, and they don't add up to anything in particular. We want <strong>focus percentages</strong>: positive numbers that add up to 1. The function that does this is called <strong>softmax</strong>:</p>
+<ol><li>Raise <em>e</em> (about 2.718) to the power of each score.</li><li>Add the results.</li><li>Divide each result by that total.</li></ol>
+<p>For the "bank" row, with scores 2, 0, 1:</p>
+<div class="table-wrap"><table><thead><tr><th></th><th>Score</th><th><em>e</em><sup>score</sup></th><th>÷ 11.107</th></tr></thead><tbody><tr><td>bank</td><td>2</td><td>7.389</td><td><strong>0.665</strong></td></tr><tr><td>of</td><td>0</td><td>1.000</td><td><strong>0.090</strong></td></tr><tr><td>river</td><td>1</td><td>2.718</td><td><strong>0.245</strong></td></tr><tr><td><strong>Sum</strong></td><td></td><td>11.107</td><td><strong>1.000</strong></td></tr></tbody></table></div>
+<p>So "bank" puts <strong>66.5%</strong> of its focus on itself, <strong>24.5%</strong> on "river" and <strong>9%</strong> on "of". Softmax never gives exactly zero, and it widens the gap between high and low scores.</p>
+<p>Doing the same for every row gives the <strong>focus matrix</strong>, usually called <strong>A</strong>:</p>
+<div class="table-wrap"><table><thead><tr><th>Focus of…</th><th>on bank</th><th>on of</th><th>on river</th></tr></thead><tbody><tr><td><strong>bank</strong></td><td>0.665</td><td>0.090</td><td>0.245</td></tr><tr><td><strong>of</strong></td><td>0.090</td><td>0.665</td><td>0.245</td></tr><tr><td><strong>river</strong></td><td>0.212</td><td>0.212</td><td>0.576</td></tr></tbody></table></div>
+<p>Every row adds up to 1. Every word focuses most on itself, but the off-diagonal numbers aren't zero: context is starting to flow between related words.</p>
+<h2 id="step-3-mix-blend-the-vectors-using-those-percentages">Step 3: Mix (blend the vectors using those percentages)</h2>
+<p>Each row of A is a <strong>recipe</strong> for a new vector. For "bank" it says: take 0.665 of "bank", plus 0.090 of "of", plus 0.245 of "river", and add them up.</p>
+<pre class="code"><code>  0.665 × [1, 0, 1, 0]      (bank)
++ 0.090 × [0, 1, 0, 1]      (of)
++ 0.245 × [1, 1, 0, 0]      (river)
+= [0.910, 0.335, 0.665, 0.090]</code></pre>
+<p>The original "bank" was <code>[1, 0, 1, 0]</code>. Positions 2 and 4 were zero; now they're 0.335 and 0.090. <strong>That's information from "river" and "of" flowing into "bank."</strong> The new vector is no longer generic: it's specific to <em>this</em> sentence.</p>
+<p>Doing the same for all three words:</p>
+<div class="table-wrap"><table><thead><tr><th>Word</th><th>Before</th><th>After self-attention</th></tr></thead><tbody><tr><td>bank</td><td><code>[1, 0, 1, 0]</code></td><td><code>[0.910, 0.335, 0.665, 0.090]</code></td></tr><tr><td>of</td><td><code>[0, 1, 0, 1]</code></td><td><code>[0.335, 0.910, 0.090, 0.665]</code></td></tr><tr><td>river</td><td><code>[1, 1, 0, 0]</code></td><td><code>[0.788, 0.788, 0.212, 0.212]</code></td></tr></tbody></table></div>
+<p>"bank" absorbed more from "river" than from "of", because "river" had the higher score. "river" absorbed equally from "bank" and "of", because its two scores were tied. That's exactly what we hoped for.</p>
+<h2 id="the-same-thing-all-at-once">The same thing, all at once</h2>
+<p>We did that one word at a time. Stack the three vectors into a matrix <strong>X</strong> (3 rows, 4 columns), and the whole calculation becomes one line:</p>
+<pre class="code"><code>SelfAttention(X) = softmax(X · Xᵀ) · X</code></pre>
+<ul><li><strong>Score:</strong> <code>S = X · Xᵀ</code> computes all nine dot products in one multiplication.</li><li><strong>Normalize:</strong> <code>A = softmax(S)</code>, applied row by row.</li><li><strong>Mix:</strong> <code>Y = A · X</code> blends every word at once.</li></ul>
+<p>Two matrix multiplications and one softmax. And it gives exactly the numbers we just computed by hand.</p>
+<p>Notice that the output has <strong>the same shape as the input</strong>: 3 words with 4 numbers each go in, 3 words with 4 numbers each come out. That's why transformers can stack attention layers on top of each other, each one adding more context.</p>
+<h2 id="why-is-it-called-self-attention">Why is it called <em>self</em>-attention?</h2>
+<p>Count the X's in the formula: there are three, and they play different roles.</p>
+<ul><li>The first X <strong>asks</strong>: "how similar am I to everyone?"</li><li>The second X (transposed) <strong>answers</strong>: "here are my features for comparison."</li><li>The third X is the <strong>content</strong> being blended.</li></ul>
+<p>All three are the same sentence, so the sentence is attending to <em>itself</em>.</p>
+<h2 id="the-catch-and-what-comes-next">The catch, and what comes next</h2>
+<p>In everything above, the focus percentages were completely fixed by the starting vectors. There was nothing the model could <em>learn</em>. But different tasks need different kinds of focus: sometimes "bank" should look at "river" for meaning, and sometimes at "of" for grammar.</p>
+<p>The fix is to give each of those three roles its own learnable transformation. These are the famous <strong>query, key and value</strong> matrices, and adding them gives the attention used in real transformers:</p>
+<pre class="code"><code>Attention(Q, K, V) = softmax(Q · Kᵀ / √d) · V</code></pre>
+<p>Same three steps, score, normalize, mix, just on transformed versions of the words.</p>
+<h2 id="try-it-yourself">Try it yourself</h2>
+<ul><li><strong>Interactive demo:</strong> click any word in "bank of river" and watch these exact numbers update live → <a href="/#demo">latentquest.ai</a></li><li><strong>Code:</strong> the same calculation in NumPy and PyTorch, with tests that check every number in this article → <a href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">self-attention-from-scratch on GitHub</a></li></ul>
+<p>Here's the whole calculation in a few lines of NumPy:</p>
+<pre class="code"><code class="language-python">import numpy as np
+
+X = np.array([[1, 0, 1, 0],   # bank
+              [0, 1, 0, 1],   # of
+              [1, 1, 0, 0]],  # river
+             dtype=float)
+
+S = X @ X.T                                         # 1. score
+A = np.exp(S) / np.exp(S).sum(axis=1, keepdims=True)  # 2. normalize (softmax)
+Y = A @ X                                           # 3. mix
+
+print(A.round(3))   # bank row: [0.665 0.09  0.245]
+print(Y.round(3))   # new bank: [0.91  0.335 0.665 0.09 ]</code></pre>
+<h2 id="go-further">Go further</h2>
+<p>This article covers Sessions 1–2 of our course <strong>Master Transformers from Scratch: BERT, ViT &amp; AI Search</strong>. The course continues with query, key and value, multi-head attention, the full encoder block and positional encoding, then builds BERT in PyTorch and applies it to text classification, named-entity recognition, Vision Transformers and AI-powered search.</p>
+        </div>
+        <aside class="article__cta">
+          <div>
+            <p class="article__cta-title">Master Transformers from Scratch: BERT, ViT &amp; AI Search</p>
+            <p>From attention to BERT, Vision Transformers and AI-powered search, step by step, with hands-on projects.</p>
+          </div>
+          <div class="article__cta-actions">
+            <a class="btn btn--primary" href="https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9" target="_blank" rel="noopener">See the course</a>
+            <a class="btn btn--ghost" href="../../coupon/?course=transformers">Get a coupon</a>
+          </div>
+        </aside>
+      </article>
+      <aside class="article__side" aria-label="On this page">
+        <p class="article__side-title">On this page</p>
+        <ol><li><a href="#the-example-three-words-four-numbers-each">The example: three words, four numbers each</a></li><li><a href="#step-1-score-how-similar-is-each-pair-of-words">Step 1: Score (how similar is each pair of words?)</a></li><li><a href="#step-2-normalize-turn-scores-into-percentages">Step 2: Normalize (turn scores into percentages)</a></li><li><a href="#step-3-mix-blend-the-vectors-using-those-percentages">Step 3: Mix (blend the vectors using those percentages)</a></li><li><a href="#the-same-thing-all-at-once">The same thing, all at once</a></li><li><a href="#why-is-it-called-self-attention">Why is it called self-attention?</a></li><li><a href="#the-catch-and-what-comes-next">The catch, and what comes next</a></li><li><a href="#try-it-yourself">Try it yourself</a></li><li><a href="#go-further">Go further</a></li></ol>
+        <a class="article__side-demo" href="../../#demo">Try the live attention demo →</a>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> LatentQuest · Mohammad R. Khalili Shoja &amp; Seyed Vahid Mirnezami</p>
+      <nav aria-label="Footer">
+        <a href="../../learn/">Learn</a>
+        <a href="https://www.linkedin.com/company/latentquest" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/LatentQuest" target="_blank" rel="noopener">GitHub</a>
+        <a href="../../coupon/">Coupons</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        const next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>

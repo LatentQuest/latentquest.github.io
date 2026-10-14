@@ -35,6 +35,18 @@ python3 -m http.server 8000
 # open http://localhost:8000
 ```
 
+## Articles (/learn/)
+
+Free articles live at [latentquest.ai/learn](https://latentquest.ai/learn/). To add one:
+
+1. Write `learn/_articles/<slug>.md` with a front-matter block (title, slug, description, date, hub, and optional
+   session and reading_time). See `self-attention-explained.md` for an example.
+2. Run `python3 tools/build.py`. It builds `learn/<slug>/index.html`, updates the `learn/` hub page and the sitemap.
+3. Open a pull request. After merging, ask Google to index the new page in Search Console (URL inspection).
+
+Base articles on the course's own tutor scripts (`Rasa/session_N_tutor_script.md` in AlgoML), not on the
+third-party source transcripts. When republishing on Medium or DEV, set the canonical link to the latentquest.ai article.
+
 ## Brand kit
 
 Logo files live in [`assets/brand/`](assets/brand/):
