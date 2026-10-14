@@ -236,8 +236,148 @@
     return play;
   }
 
+  /* ---------- 4. Playground: edit the words, everything recomputes ---------- */
+  function playground(root) {
+    root.classList.add("lq-play");
+    root.innerHTML = "";
+    const D = 4;
+    const DEFAULT = { words: ["bank", "of", "river"], X: [[1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 0, 0]] };
+    let state = { words: [...DEFAULT.words], X: DEFAULT.X.map((r) => [...r]), sharp: 1, scale: false, sel: 0 };
+
+    const head = el("div", "lq-anim__head");
+    head.append(el("span", "lq-anim__title", "Attention playground · change the numbers"));
+    const reset = el("button", "lq-anim__btn", "↺ Reset");
+    reset.type = "button";
+    head.append(reset);
+
+    const inputs = el("div", "lq-play__inputs");
+    const controls = el("div", "lq-play__controls");
+    const sharpLabel = el("label", "lq-play__control");
+    const sharpText = el("span", "", "");
+    const sharp = el("input");
+    Object.assign(sharp, { type: "range", min: "0.25", max: "3", step: "0.25", value: "1" });
+    sharp.setAttribute("aria-label", "Sharpness");
+    sharpLabel.append(sharpText, sharp);
+    const scaleLabel = el("label", "lq-play__control lq-play__check");
+    const scale = el("input");
+    scale.type = "checkbox";
+    scaleLabel.append(scale, el("span", "", "Divide scores by √d (d = 4)"));
+    const shuffle = el("button", "lq-anim__btn", "⇄ Shuffle word order");
+    shuffle.type = "button";
+    controls.append(sharpLabel, scaleLabel, shuffle);
+
+    const panels = el("div", "lq-play__panels");
+    const pS = el("div", "lq-play__panel"), pA = el("div", "lq-play__panel"), pY = el("div", "lq-play__panel");
+    panels.append(pS, pA, pY);
+    const recipe = el("p", "lq-play__recipe");
+    recipe.setAttribute("aria-live", "polite");
+    const hint = el("p", "lq-play__hint",
+      "Try this: change “of” to [1, 0, 0, 0] so it shares a feature with “bank”, and watch how much attention it now gets.");
+    root.append(head, inputs, controls, panels, recipe, hint);
+
+    const heatCell = (v, max, extra = "") => {
+      const c = el("span", "lq-cell lq-play__cell " + extra, fmt(v, 2));
+      c.style.setProperty("--heat", max > 0 ? Math.min(1, Math.abs(v) / max) : 0);
+      if (v < 0) c.classList.add("is-neg");
+      return c;
+    };
+
+    function grid(panel, title, note, rowLabels, colLabels, M, opts = {}) {
+      panel.innerHTML = "";
+      panel.append(el("p", "lq-play__ptitle", title));
+      const g = el("div", "lq-play__grid");
+      g.style.gridTemplateColumns = `auto repeat(${colLabels.length}, minmax(0, 1fr))`;
+      g.append(el("span", ""));
+      colLabels.forEach((c) => g.append(el("span", "lq-play__col", c)));
+      const max = Math.max(1e-9, ...M.flat().map(Math.abs));
+      M.forEach((row, i) => {
+        const lab = el("button", "lq-play__row" + (i === state.sel ? " is-sel" : ""), rowLabels[i]);
+        lab.type = "button";
+        lab.addEventListener("click", () => { state.sel = i; render(); });
+        g.append(lab);
+        row.forEach((v, j) => {
+          const extra = (i === state.sel ? "is-selrow " : "") + (opts.changed && opts.changed(i, j) ? "is-new" : "");
+          g.append(heatCell(v, opts.max || max, extra));
+        });
+      });
+      panel.append(g, el("p", "lq-play__note", note));
+    }
+
+    function buildInputs() {
+      inputs.innerHTML = "";
+      state.words.forEach((w, i) => {
+        const row = el("div", "lq-play__wrow");
+        const name = el("input", "lq-play__name");
+        Object.assign(name, { type: "text", value: w, maxLength: 10 });
+        name.setAttribute("aria-label", `Word ${i + 1} name`);
+        name.addEventListener("input", () => { state.words[i] = name.value.trim() || `word ${i + 1}`; render(false); });
+        row.append(name);
+        for (let j = 0; j < D; j++) {
+          const n = el("input", "lq-play__num");
+          Object.assign(n, { type: "number", min: "-3", max: "3", step: "1", value: state.X[i][j] });
+          n.setAttribute("aria-label", `${w}, number ${j + 1}`);
+          n.addEventListener("input", () => {
+            const v = parseFloat(n.value);
+            state.X[i][j] = Number.isFinite(v) ? Math.max(-3, Math.min(3, v)) : 0;
+            render(false);
+          });
+          row.append(n);
+        }
+        inputs.append(row);
+      });
+    }
+
+    function render(rebuild = true) {
+      if (rebuild) buildInputs();
+      const { X: M, words } = state;
+      const n = M.length;
+      const S = M.map((a) => M.map((b) => a.reduce((s, v, k) => s + v * b[k], 0)));
+      const factor = state.sharp / (state.scale ? Math.sqrt(D) : 1);
+      const A = S.map((row) => {
+        const z = row.map((v) => v * factor);
+        const m = Math.max(...z);
+        const e = z.map((v) => Math.exp(v - m));
+        const sum = e.reduce((a, b) => a + b, 0);
+        return e.map((v) => v / sum);
+      });
+      const Y = A.map((row) => [...Array(D).keys()].map((j) => row.reduce((s, w, i) => s + w * M[i][j], 0)));
+      sharpText.textContent = `Sharpness × ${state.sharp}`;
+      grid(pS, "1 · Scores", "Dot product of each pair. Bigger = more similar.", words, words, S);
+      grid(pA, "2 · Focus (softmax)", "Each row adds up to 100%.", words, words, A, { max: 1 });
+      grid(pY, "3 · New vectors", "Amber outline: a 0 that became non-zero (new context).", words,
+        ["1", "2", "3", "4"], Y, { changed: (i, j) => M[i][j] === 0 && Math.abs(Y[i][j]) > 0.005 });
+      const r = A[state.sel];
+      recipe.innerHTML = "";
+      recipe.append(el("strong", "", `new ${words[state.sel]} = `));
+      recipe.append(document.createTextNode(r.map((w, i) => `${(w * 100).toFixed(1)}% ${words[i]}`).join(" + ")));
+      recipe.append(el("span", "lq-play__tip", "  (click a word in the grids to see its recipe)"));
+    }
+
+    sharp.addEventListener("input", () => { state.sharp = parseFloat(sharp.value); render(false); });
+    scale.addEventListener("change", () => { state.scale = scale.checked; render(false); });
+    shuffle.addEventListener("click", () => {
+      const order = [...state.words.keys()];
+      do { order.sort(() => Math.random() - 0.5); } while (order.every((v, i) => v === i));
+      const selWord = state.words[state.sel];
+      state.words = order.map((i) => state.words[i]);
+      state.X = order.map((i) => state.X[i]);
+      state.sel = state.words.indexOf(selWord);
+      render();
+      hint.textContent = `New order: “${state.words.join(" ")}”. Each word’s focus and new vector are exactly the same as before, just listed in a different row. Self-attention ignores word order; positional encoding fixes that.`;
+    });
+    reset.addEventListener("click", () => {
+      state = { words: [...DEFAULT.words], X: DEFAULT.X.map((r) => [...r]), sharp: 1, scale: false, sel: 0 };
+      sharp.value = "1";
+      scale.checked = false;
+      hint.textContent = "Try this: change “of” to [1, 0, 0, 0] so it shares a feature with “bank”, and watch how much attention it now gets.";
+      render();
+    });
+    render();
+    return () => {};
+  }
+
   /* ---------- Wire up ---------- */
-  const MAKERS = { dot: animDot, softmax: animSoftmax, mix: animMix };
+  const MAKERS = { dot: animDot, softmax: animSoftmax, mix: animMix, playground };
   const io = "IntersectionObserver" in window
     ? new IntersectionObserver((entries) => {
         entries.forEach((e) => {

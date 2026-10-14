@@ -171,7 +171,10 @@ Same three steps, score, normalize, mix, just on transformed versions of the wor
 
 ## Try it yourself
 
-- **Interactive demo:** click any word in "bank of river" and watch these exact numbers update live → [latentquest.ai](/#demo)
+Change any number below, or rename the words, and every step recalculates instantly.
+
+{{anim:playground}}
+
 - **Code:** the same calculation in NumPy and PyTorch, with tests that check every number in this article → [self-attention-from-scratch on GitHub](https://github.com/seyedvahidmirnezami/self-attention-from-scratch)
 
 Here's the whole calculation in a few lines of NumPy (a Python library for working with tables of numbers):

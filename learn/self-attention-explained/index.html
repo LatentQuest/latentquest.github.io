@@ -181,7 +181,9 @@
 <aside class="callout"><p><strong>For experienced readers: what changes in a real transformer</strong></p>
 <ul><li><strong>Embeddings</strong> are learned, with hundreds of dimensions (768 in BERT-base), not hand-picked 0s and 1s.</li><li><strong>Q, K and V</strong> are separate learned projections of X, and scores are scaled by √d<sub>k</sub>.</li><li><strong>Multi-head attention</strong> runs several attention operations in parallel (12 heads in BERT-base), each free to learn a different kind of relationship, then concatenates them.</li><li><strong>Masks</strong> stop attention to padding tokens, and in text generators like GPT, to future tokens.</li><li><strong>Cost</strong> grows with the square of the sequence length, because the score matrix is n × n.</li><li>Attention sits inside an <strong>encoder block</strong> with residual connections, layer normalization and a feed-forward network, stacked many times.</li></ul></aside>
 <h2 id="try-it-yourself">Try it yourself</h2>
-<ul><li><strong>Interactive demo:</strong> click any word in "bank of river" and watch these exact numbers update live → <a href="/#demo">latentquest.ai</a></li><li><strong>Code:</strong> the same calculation in NumPy and PyTorch, with tests that check every number in this article → <a href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">self-attention-from-scratch on GitHub</a></li></ul>
+<p>Change any number below, or rename the words, and every step recalculates instantly.</p>
+<figure class="lq-anim" data-anim="playground" aria-label="Step-by-step animation"></figure>
+<ul><li><strong>Code:</strong> the same calculation in NumPy and PyTorch, with tests that check every number in this article → <a href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">self-attention-from-scratch on GitHub</a></li></ul>
 <p>Here's the whole calculation in a few lines of NumPy (a Python library for working with tables of numbers):</p>
 <pre class="code"><code class="language-python">import numpy as np
 
