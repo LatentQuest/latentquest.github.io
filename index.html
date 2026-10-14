@@ -43,6 +43,63 @@
     ]
   }
   </script>
+  <script type="application/ld+json" id="course-jsonld">
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "Master Transformers from Scratch: BERT, ViT & AI Search",
+  "description": "From vectors and attention math to BERT, Vision Transformers and two-tower semantic search.",
+  "url": "https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9",
+  "provider": {
+    "@type": "Organization",
+    "name": "LatentQuest",
+    "url": "https://latentquest.ai/"
+  },
+  "inLanguage": "en",
+  "isAccessibleForFree": false,
+  "instructor": [
+    {
+      "@type": "Person",
+      "name": "Mohammad R. Khalili Shoja",
+      "url": "https://khalili65.github.io/"
+    },
+    {
+      "@type": "Person",
+      "name": "Seyed Vahid Mirnezami",
+      "url": "https://seyedvahidmirnezami.github.io/"
+    }
+  ],
+  "offers": {
+    "@type": "Offer",
+    "category": "Paid",
+    "url": "https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9"
+  },
+  "hasCourseInstance": {
+    "@type": "CourseInstance",
+    "courseMode": "Online"
+  },
+  "image": "https://latentquest.ai/assets/img/og-cover.jpg",
+  "teaches": [
+    "Vectors, Dot Products, and Matrices",
+    "Why Attention? From Ambiguity to Context",
+    "Self-Attention with Real Numbers",
+    "Making Attention Learnable: Query, Key, and Value",
+    "Multi-Head Attention",
+    "The Transformer Encoder Block",
+    "Positional Encoding",
+    "BERT: The Encoder in the Wild",
+    "Tensors, Shape & the Tree Mental Model",
+    "Autograd & nn.Module",
+    "Data Pipelines & Layer Containers",
+    "BERT-Base Masked Language Model Pretraining in PyTorch",
+    "Fine-Tune BERT for Disaster Tweet Classification",
+    "Fine-Tune BERT for Named Entity Recognition",
+    "Knowledge Distillation and DistilBERT",
+    "Vision Transformers and Cassava Leaf Disease",
+    "Two Towers From Scratch: Semantic Search"
+  ]
+}
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -104,7 +161,8 @@
             <div class="mini-matrix__label">attention("bank of river")</div>
             <div class="mini-matrix__grid" id="mini-matrix"></div>
           </div>
-          <div class="taught-by" id="taught-by"></div>
+          <div class="taught-by" id="taught-by"><div class="taught-by__faces"><img src="assets/img/people/mohammad.jpg" alt="" width="40" height="40" loading="lazy"><img src="assets/img/people/vahid.jpg" alt="" width="40" height="40" loading="lazy"></div>
+    <p>Taught by <strong>Mohammad R. Khalili Shoja</strong> &amp; <strong>Seyed Vahid Mirnezami</strong></p></div>
           <div class="profile__links">
             <a data-featured-link href="https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9" target="_blank" rel="noopener">Enroll on Udemy</a>
             <a data-coupon-link href="coupon/">Get a coupon</a>
@@ -131,17 +189,73 @@
         <div class="section__head reveal">
           <p class="kicker" id="fc-kicker">The course</p>
           <h2 id="fc-title">Master Transformers from Scratch: BERT, ViT &amp; AI Search</h2>
-          <p class="section__lead" id="fc-lead"></p>
+          <p class="section__lead" id="fc-lead">From vectors and attention math to BERT, Vision Transformers and two-tower semantic search. Taught by Mohammad R. Khalili Shoja and Seyed Vahid Mirnezami.
+      You won't just hear definitions. You'll see the numbers, build the layers, and ship code that runs.</p>
         </div>
-        <div class="pillars" id="fc-pillars"></div>
+        <div class="pillars" id="fc-pillars">
+      <article class="pillar reveal is-visible">
+        <div class="pillar__icon pillar__icon--cyan" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h7"></path><circle cx="18" cy="16" r="3"></circle></svg></div>
+        <h3>Real numbers first</h3>
+        <p>Self-attention, Q/K/V and multi-head attention computed by hand on a three-word sentence, so every formula has a number you can check.</p>
+      </article>
+      <article class="pillar reveal is-visible">
+        <div class="pillar__icon pillar__icon--amber" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"></path></svg></div>
+        <h3>Then build it in PyTorch</h3>
+        <p>Tensors, autograd and <code>nn.Module</code>, then a BERT-style masked language model written layer by layer.</p>
+      </article>
+      <article class="pillar reveal is-visible">
+        <div class="pillar__icon pillar__icon--violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.8 6.5 19.5l1-6.3L3 8.9 9 8z"></path></svg></div>
+        <h3>Then ship real projects</h3>
+        <p>Text classification, named entity recognition, distillation, Vision Transformers and two-tower semantic search on real Kaggle data.</p>
+      </article></div>
         <div class="syllabus reveal" id="syllabus">
-          <div class="syllabus__tabs" role="tablist" aria-label="Course tracks"></div>
-          <ol class="syllabus__list" id="syllabus-list"></ol>
+          <div class="syllabus__tabs" id="syllabus-tabs" role="tablist" aria-label="Course tracks"><button type="button" class="tab" role="tab" aria-selected="true" data-i="0">Attention math<small>0–7</small></button><button type="button" class="tab" role="tab" aria-selected="false" data-i="1">PyTorch<small>8–10</small></button><button type="button" class="tab" role="tab" aria-selected="false" data-i="2">BERT projects<small>11–14</small></button><button type="button" class="tab" role="tab" aria-selected="false" data-i="3">Vision &amp; search<small>15–16</small></button></div>
+          <ol class="syllabus__list" id="syllabus-list">
+      <li class="lesson" style="animation-delay:0ms">
+        <span class="lesson__num">00</span>
+        <span class="lesson__title">Vectors, Dot Products, and Matrices</span>
+        
+      </li>
+      <li class="lesson" style="animation-delay:40ms">
+        <span class="lesson__num">01</span>
+        <span class="lesson__title">Why Attention? From Ambiguity to Context</span>
+        
+      </li>
+      <li class="lesson" style="animation-delay:80ms">
+        <span class="lesson__num">02</span>
+        <span class="lesson__title">Self-Attention with Real Numbers</span>
+        <a class="lesson__tag" href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">free code</a>
+      </li>
+      <li class="lesson" style="animation-delay:120ms">
+        <span class="lesson__num">03</span>
+        <span class="lesson__title">Making Attention Learnable: Query, Key, and Value</span>
+        <a class="lesson__tag" href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">free code</a>
+      </li>
+      <li class="lesson" style="animation-delay:160ms">
+        <span class="lesson__num">04</span>
+        <span class="lesson__title">Multi-Head Attention</span>
+        <a class="lesson__tag" href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">free code</a>
+      </li>
+      <li class="lesson" style="animation-delay:200ms">
+        <span class="lesson__num">05</span>
+        <span class="lesson__title">The Transformer Encoder Block</span>
+        <a class="lesson__tag" href="https://github.com/seyedvahidmirnezami/transformer-encoder-pytorch" target="_blank" rel="noopener">free code</a>
+      </li>
+      <li class="lesson" style="animation-delay:240ms">
+        <span class="lesson__num">06</span>
+        <span class="lesson__title">Positional Encoding</span>
+        <a class="lesson__tag" href="https://github.com/seyedvahidmirnezami/transformer-encoder-pytorch" target="_blank" rel="noopener">free code</a>
+      </li>
+      <li class="lesson" style="animation-delay:280ms">
+        <span class="lesson__num">07</span>
+        <span class="lesson__title">BERT: The Encoder in the Wild</span>
+        
+      </li></ol>
         </div>
         <div class="course-cta reveal">
           <div>
-            <p class="course-cta__title" id="fc-cta-title"></p>
-            <p class="course-cta__sub" id="fc-cta-sub"></p>
+            <p class="course-cta__title" id="fc-cta-title">Interview-ready intuition and working code, in one place.</p>
+            <p class="course-cta__sub" id="fc-cta-sub">A guide for every session, and runnable code for every project.</p>
           </div>
           <div class="course-cta__actions">
             <a class="btn btn--ghost" data-coupon-link href="coupon/">Get a coupon</a>
@@ -202,7 +316,43 @@
           <h2>Free code from the course</h2>
           <p class="section__lead">Readable, tested, and runnable in Colab or on Kaggle. Start here, then take the full course for the complete path.</p>
         </div>
-        <div class="repos" id="repos"></div>
+        <div class="repos" id="repos">
+    <a class="repo reveal is-visible" href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">
+      <div class="repo__top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.07 1.06A2.49 2.49 0 0 1 2 11.5v-9zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8V1.5z"></path></svg><span class="repo__name">self-attention-from-scratch</span><span class="repo__session">Sessions 2–4</span></div>
+      <p class="repo__desc">Self-attention explained with real numbers, then built in NumPy and PyTorch. Tests check every hand-worked number.</p>
+      <div class="repo__meta">
+        <span><i class="lang-dot lang-dot--nb"></i>Jupyter Notebook</span>
+        <span data-stars="self-attention-from-scratch" hidden=""><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .67.42l1.88 3.8 4.19.61a.75.75 0 0 1 .42 1.28l-3.04 2.96.72 4.17a.75.75 0 0 1-1.09.79L8 12.31l-3.75 1.97a.75.75 0 0 1-1.09-.79l.72-4.17L.84 6.36a.75.75 0 0 1 .42-1.28l4.19-.61L7.33.67A.75.75 0 0 1 8 .25z"></path></svg><b>0</b></span>
+      </div>
+      <div class="repo__tags"><span>attention</span><span>numpy</span><span>pytorch</span></div>
+    </a>
+    <a class="repo reveal is-visible" href="https://github.com/seyedvahidmirnezami/transformer-encoder-pytorch" target="_blank" rel="noopener">
+      <div class="repo__top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.07 1.06A2.49 2.49 0 0 1 2 11.5v-9zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8V1.5z"></path></svg><span class="repo__name">transformer-encoder-pytorch</span><span class="repo__session">Sessions 5–6</span></div>
+      <p class="repo__desc">The full encoder block from scratch, plus an experiment: 50% accuracy without positional encoding, 100% with it.</p>
+      <div class="repo__meta">
+        <span><i class="lang-dot lang-dot--nb"></i>Jupyter Notebook</span>
+        <span data-stars="transformer-encoder-pytorch" hidden=""><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .67.42l1.88 3.8 4.19.61a.75.75 0 0 1 .42 1.28l-3.04 2.96.72 4.17a.75.75 0 0 1-1.09.79L8 12.31l-3.75 1.97a.75.75 0 0 1-1.09-.79l.72-4.17L.84 6.36a.75.75 0 0 1 .42-1.28l4.19-.61L7.33.67A.75.75 0 0 1 8 .25z"></path></svg><b>0</b></span>
+      </div>
+      <div class="repo__tags"><span>encoder</span><span>positional-encoding</span><span>pytorch</span></div>
+    </a>
+    <a class="repo reveal is-visible" href="https://github.com/seyedvahidmirnezami/vision-transformer-cassava" target="_blank" rel="noopener">
+      <div class="repo__top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.07 1.06A2.49 2.49 0 0 1 2 11.5v-9zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8V1.5z"></path></svg><span class="repo__name">vision-transformer-cassava</span><span class="repo__session">Session 15</span></div>
+      <p class="repo__desc">Fine-tune a Vision Transformer on Kaggle cassava leaf photos, from patches to a competition submission.</p>
+      <div class="repo__meta">
+        <span><i class="lang-dot lang-dot--nb"></i>Jupyter Notebook</span>
+        <span data-stars="vision-transformer-cassava" hidden=""><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .67.42l1.88 3.8 4.19.61a.75.75 0 0 1 .42 1.28l-3.04 2.96.72 4.17a.75.75 0 0 1-1.09.79L8 12.31l-3.75 1.97a.75.75 0 0 1-1.09-.79l.72-4.17L.84 6.36a.75.75 0 0 1 .42-1.28l4.19-.61L7.33.67A.75.75 0 0 1 8 .25z"></path></svg><b>0</b></span>
+      </div>
+      <div class="repo__tags"><span>vit</span><span>computer-vision</span><span>kaggle</span></div>
+    </a>
+    <a class="repo reveal is-visible" href="https://github.com/seyedvahidmirnezami/semantic-search-two-tower" target="_blank" rel="noopener">
+      <div class="repo__top"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.71 1.71.75.75 0 0 1-1.07 1.06A2.49 2.49 0 0 1 2 11.5v-9zm10.5-1h-8a1 1 0 0 0-1 1v6.71A2.5 2.5 0 0 1 4.5 9h8V1.5z"></path></svg><span class="repo__name">semantic-search-two-tower</span><span class="repo__session">Session 16</span></div>
+      <p class="repo__desc">Two-tower retrieval and cross-encoder re-ranking, built by hand from a plain transformer encoder.</p>
+      <div class="repo__meta">
+        <span><i class="lang-dot lang-dot--nb"></i>Jupyter Notebook</span>
+        <span data-stars="semantic-search-two-tower" hidden=""><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .67.42l1.88 3.8 4.19.61a.75.75 0 0 1 .42 1.28l-3.04 2.96.72 4.17a.75.75 0 0 1-1.09.79L8 12.31l-3.75 1.97a.75.75 0 0 1-1.09-.79l.72-4.17L.84 6.36a.75.75 0 0 1 .42-1.28l4.19-.61L7.33.67A.75.75 0 0 1 8 .25z"></path></svg><b>0</b></span>
+      </div>
+      <div class="repo__tags"><span>retrieval</span><span>embeddings</span><span>kaggle</span></div>
+    </a></div>
       </div>
     </section>
 
@@ -214,7 +364,25 @@
           <h2>Taught by people who build these systems for a living</h2>
           <p class="section__lead">We both earned our Ph.D.s at Iowa State University and now build computer vision, recommendation and search systems in industry. LatentQuest is how we teach what we wish we'd been taught: understand every layer, then build it, then ship it.</p>
         </div>
-        <div class="instructors" id="instructor-list"></div>
+        <div class="instructors" id="instructor-list">
+    <article class="instructor reveal is-visible">
+      <img class="instructor__photo" src="assets/img/people/mohammad.jpg" alt="Portrait of Mohammad R. Khalili Shoja" width="120" height="120" loading="lazy">
+      <div>
+        <h3>Mohammad R. Khalili Shoja</h3>
+        <p class="person__role">Staff Data Scientist, Walmart Global Tech</p>
+        <p class="instructor__bio">Recommender systems, ranking and retrieval at web scale. Previously tech lead for paid-search relevance at Microsoft. Ph.D. in Computer Engineering from Iowa State University.</p>
+        <div class="person__links"><a href="https://khalili65.github.io/" target="_blank" rel="noopener">Website</a><a href="https://github.com/khalili65" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/mohammad-reza-khalili-shoja" target="_blank" rel="noopener">LinkedIn</a></div>
+      </div>
+    </article>
+    <article class="instructor reveal is-visible">
+      <img class="instructor__photo" src="assets/img/people/vahid.jpg" alt="Portrait of Seyed Vahid Mirnezami" width="120" height="120" loading="lazy">
+      <div>
+        <h3>Seyed Vahid Mirnezami</h3>
+        <p class="person__role">Senior Computer Vision Scientist, Bayer Crop Science</p>
+        <p class="instructor__bio">Deep learning, generative AI and vision–language models in production. Ph.D. from Iowa State University, with research on computer vision for high-throughput plant phenotyping.</p>
+        <div class="person__links"><a href="https://seyedvahidmirnezami.github.io/" target="_blank" rel="noopener">Website</a><a href="https://github.com/seyedvahidmirnezami" target="_blank" rel="noopener">GitHub</a><a href="https://www.linkedin.com/in/seyedvahidmirnezami" target="_blank" rel="noopener">LinkedIn</a></div>
+      </div>
+    </article></div>
       </div>
     </section>
 

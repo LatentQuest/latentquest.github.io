@@ -15,6 +15,10 @@ All course content lives in [`assets/data/site.js`](assets/data/site.js). To add
 4. Move `featured: true` to whichever course the homepage should spotlight.
 
 With two or more courses, the homepage shows a grid of course cards automatically.
+
+5. Run `python3 tools/build.py` (needs Google Chrome and Node). It copies the rendered course content into `index.html`
+   so search engines and AI crawlers can read it without JavaScript, regenerates the Course structured data, and updates
+   `sitemap.xml`. The site still works if you forget; you only lose search freshness.
 Instructors live in `instructors`. Free-code repos go in `repos`, each with its GitHub `owner` and course `slug`.
 Coupon requests go to `couponContact` on LinkedIn.
 
@@ -30,6 +34,11 @@ Link to a specific course with `?course=<slug>`, for example
 python3 -m http.server 8000
 # open http://localhost:8000
 ```
+
+## Search engines
+
+`robots.txt` and `sitemap.xml` are at the site root. The sitemap is submitted in Google Search Console
+(property: `latentquest.ai`, Domain type).
 
 ## Domain
 
