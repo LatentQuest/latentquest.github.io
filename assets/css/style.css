@@ -496,3 +496,10 @@ h1, h2, h3 { text-wrap: balance; }
   .lq-cell { height: 36px; font-size: 13px; }
   .lq-anim { padding: 16px 14px 14px; }
 }
+
+/* Callout boxes in articles */
+.prose .callout { margin: 0 0 1.6em; padding: 18px 22px; border-radius: var(--radius); border: 1px solid var(--border); border-left: 4px solid var(--cyan); background: color-mix(in srgb, var(--cyan) 7%, var(--surface)); }
+.prose .callout p:first-child { margin-bottom: .5em; }
+.prose .callout ul { margin-bottom: 0; }
+.prose .callout li { margin-bottom: .45em; }
+.prose .callout + h2 { margin-top: 1.4em; }

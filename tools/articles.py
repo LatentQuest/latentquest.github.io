@@ -18,7 +18,8 @@ then run `python3 tools/build.py` (which calls this) or `python3 tools/articles.
 It writes learn/<slug>/index.html for each article and the learn/index.html hub.
 Only the Python standard library is used. The Markdown subset supported:
 headings (## and ###), paragraphs, **bold**, *italic*, `code`, [links](url),
-bullet and numbered lists, pipe tables, fenced code blocks and <sup>/<sub> tags.
+bullet and numbered lists, pipe tables, fenced code blocks, <sup>/<sub> tags,
+and callout boxes (lines starting with "> ").
 A line {{anim:NAME}} inserts an animation from assets/js/article-anim.js (dot, softmax, mix).
 """
 
@@ -85,6 +86,14 @@ def markdown(md):
             cls = f' class="language-{lang}"' if lang else ""
             out.append(f'<pre class="code"><code{cls}>{html.escape(chr(10).join(body))}</code></pre>')
             continue
+        if line.startswith("> "):
+            body = []
+            while i < len(lines) and lines[i].startswith(">"):
+                body.append(lines[i][1:].strip())
+                i += 1
+            inner, _ = markdown("\n".join(body))
+            out.append(f'<aside class="callout">{inner}</aside>')
+            continue
         m = re.match(r"^\{\{anim:([a-z-]+)\}\}$", line.strip())
         if m:
             out.append(f'<figure class="lq-anim" data-anim="{m.group(1)}" aria-label="Step-by-step animation"></figure>')
@@ -119,7 +128,7 @@ def markdown(md):
             out.append(f"<{tag}>" + "".join(f"<li>{inline(x)}</li>" for x in items) + f"</{tag}>")
             continue
         para = []
-        while i < len(lines) and lines[i].strip() and not re.match(r"^(```|#{2,3}\s|\||- |\d+\. )", lines[i]):
+        while i < len(lines) and lines[i].strip() and not re.match(r"^(```|#{2,3}\s|\||- |\d+\. |> )", lines[i]):
             para.append(lines[i])
             i += 1
         out.append(f"<p>{inline(' '.join(para))}</p>")
