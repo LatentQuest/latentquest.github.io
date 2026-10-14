@@ -29,7 +29,9 @@
   function shell(root, title, steps) {
     root.innerHTML = "";
     const head = el("div", "lq-anim__head");
-    head.append(el("span", "lq-anim__title", title));
+    const t = el("span", "lq-anim__title");
+    t.append(el("span", "lq-badge lq-badge--anim", "▶ Animated"), document.createTextNode(title));
+    head.append(t);
     const controls = el("div", "lq-anim__controls");
     const replay = el("button", "lq-anim__btn", "↻ Replay");
     replay.type = "button";
@@ -245,11 +247,15 @@
     let state = { words: [...DEFAULT.words], X: DEFAULT.X.map((r) => [...r]), sharp: 1, scale: false, sel: 0 };
 
     const head = el("div", "lq-anim__head");
-    head.append(el("span", "lq-anim__title", "Attention playground · change the numbers"));
+    const t = el("span", "lq-anim__title");
+    t.append(el("span", "lq-badge lq-badge--play", "✎ Interactive"), document.createTextNode("Attention playground"));
+    head.append(t);
     const reset = el("button", "lq-anim__btn", "↺ Reset");
     reset.type = "button";
     head.append(reset);
 
+    const howto = el("p", "lq-play__howto");
+    howto.innerHTML = "<strong>Your turn:</strong> click any number below and type a new one (or use ↑ ↓), rename a word, or move the slider. Everything recalculates instantly.";
     const inputs = el("div", "lq-play__inputs");
     const controls = el("div", "lq-play__controls");
     const sharpLabel = el("label", "lq-play__control");
@@ -273,7 +279,11 @@
     recipe.setAttribute("aria-live", "polite");
     const hint = el("p", "lq-play__hint",
       "Try this: change “of” to [1, 0, 0, 0] so it shares a feature with “bank”, and watch how much attention it now gets.");
-    root.append(head, inputs, controls, panels, recipe, hint);
+    root.append(head, howto, inputs, controls, panels, recipe, hint);
+    let touched = false;
+    root.addEventListener("input", () => {
+      if (!touched) { touched = true; root.classList.add("is-touched"); }
+    });
 
     const heatCell = (v, max, extra = "") => {
       const c = el("span", "lq-cell lq-play__cell " + extra, fmt(v, 2));

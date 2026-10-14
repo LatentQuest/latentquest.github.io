@@ -536,3 +536,20 @@ h1, h2, h3 { text-wrap: balance; }
   .lq-play__wrow { grid-template-columns: 80px repeat(4, minmax(0, 1fr)); }
   .lq-play__name, .lq-play__num { height: 36px; font-size: 13px; }
 }
+
+/* Make animated / interactive widgets obvious */
+.lq-anim__title { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.lq-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font: 700 11px var(--font-body); letter-spacing: .04em; text-transform: uppercase; }
+.lq-badge--anim { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 15%, transparent); }
+.lq-badge--play { color: #1a1205; background: var(--amber); }
+.lq-badge--sm { margin-left: 6px; padding: 1px 7px; font-size: 10px; vertical-align: 1px; }
+.lq-play { border: 2px solid color-mix(in srgb, var(--amber) 70%, transparent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--amber) 10%, transparent), var(--shadow); }
+.lq-play .lq-anim__title { font-size: 15px; color: var(--text); }
+.lq-play__howto { margin: 0 0 14px; font-size: 15px; color: var(--muted); }
+.lq-play__howto strong { color: var(--amber); }
+.lq-play__num, .lq-play__name { cursor: text; border-style: dashed; transition: border-color .2s, background .2s; }
+.lq-play__num:hover, .lq-play__name:hover { border-color: var(--amber); border-style: solid; background: var(--surface-2); }
+.lq-play:not(.is-touched) .lq-play__wrow:first-child .lq-play__num:first-of-type { animation: lqNudge 2.4s ease-in-out infinite; }
+@keyframes lqNudge { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--amber) 0%, transparent); } 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--amber) 45%, transparent); } }
+.lq-play__row { text-decoration: underline dotted; text-underline-offset: 3px; }
+.lq-play__row:hover { color: var(--text); }

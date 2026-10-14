@@ -273,7 +273,12 @@ def article_page(a):
     }
     prefix = "../../"
     meta = " · ".join(x for x in [a.get("reading_time"), a.get("session")] if x)
-    toc = "".join(f'<li><a href="#{anchor}">{html.escape(label)}</a></li>' for anchor, label in a["toc"])
+    play = 'data-anim="playground"' in a["body"]
+    toc = "".join(
+        f'<li><a href="#{anchor}">{html.escape(label)}'
+        + ('<span class="lq-badge lq-badge--play lq-badge--sm">interactive</span>' if play and anchor == "try-it-yourself" else "")
+        + "</a></li>"
+        for anchor, label in a["toc"])
     return head(a["title"], a["description"], url, prefix, ld) + f"""
   <main class="article">
     <div class="container article__layout">

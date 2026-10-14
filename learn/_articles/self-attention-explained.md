@@ -13,6 +13,7 @@ reading_time: 12 min read
 > - **Self-attention** lets each word borrow information from the other words in the same sentence, so "bank" next to "river" ends up different from "bank" next to "money".
 > - It takes three steps: **score** (how similar is each pair of words?), **normalize** (turn the scores into percentages), **mix** (blend the words using those percentages).
 > - Below, we compute every number by hand. If you can add and multiply, you can follow along.
+> - Watch the **animations** in each step, then try the **interactive playground** at the end: [jump to it ↓](#try-it-yourself)
 
 ## The problem: words need context
 
@@ -171,7 +172,7 @@ Same three steps, score, normalize, mix, just on transformed versions of the wor
 
 ## Try it yourself
 
-Change any number below, or rename the words, and every step recalculates instantly.
+Now it's your turn. Change any number below, or rename the words, and every step recalculates instantly.
 
 {{anim:playground}}
 
