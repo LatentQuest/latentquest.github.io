@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /learn/_articles/
 
 Sitemap: https://latentquest.ai/sitemap.xml

@@ -1,0 +1,409 @@
+/*
+ * Step-by-step animations for /learn/ articles.
+ * Markdown line {{anim:NAME}} becomes <div class="lq-anim" data-anim="NAME"></div>.
+ * Each animation plays when scrolled into view and has Replay / step controls.
+ * With prefers-reduced-motion, the final state is shown without movement.
+ */
+(() => {
+  "use strict";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, reduced ? 0 : ms));
+  const el = (tag, cls, text) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  };
+  const fmt = (v, d = 3) => (Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : v.toFixed(d));
+
+  const WORDS = ["bank", "of", "river"];
+  const X = [[1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 0, 0]];
+  const SCORES = [2, 0, 1];
+  const EXP = SCORES.map(Math.exp);
+  const SUM = EXP.reduce((a, b) => a + b, 0);
+  const FOCUS = EXP.map((v) => v / SUM);
+  const NEW_BANK = [0, 1, 2, 3].map((j) => FOCUS.reduce((s, w, i) => s + w * X[i][j], 0));
+
+  /* ---------- Shell: title, stage, caption, controls ---------- */
+  function shell(root, title, steps) {
+    root.innerHTML = "";
+    const head = el("div", "lq-anim__head");
+    const t = el("span", "lq-anim__title");
+    t.append(el("span", "lq-badge lq-badge--anim", "▶ Animated"), document.createTextNode(title));
+    head.append(t);
+    const controls = el("div", "lq-anim__controls");
+    const replay = el("button", "lq-anim__btn", "↻ Replay");
+    replay.type = "button";
+    controls.append(replay);
+    head.append(controls);
+    const stage = el("div", "lq-anim__stage");
+    const caption = el("p", "lq-anim__caption");
+    caption.setAttribute("aria-live", "polite");
+    const dots = el("div", "lq-anim__steps");
+    steps.forEach((s) => dots.append(el("span", "lq-anim__step", s)));
+    root.append(head, stage, dots, caption);
+    const setStep = (i) => [...dots.children].forEach((d, k) => d.classList.toggle("is-on", k <= i));
+    return { stage, caption, replay, setStep };
+  }
+
+  function vectorRow(label, values, cls = "") {
+    const row = el("div", "lq-row " + cls);
+    row.append(el("span", "lq-row__label", label));
+    const cells = el("div", "lq-cells");
+    values.forEach((v) => cells.append(el("span", "lq-cell", fmt(v))));
+    row.append(cells);
+    return row;
+  }
+
+  /* ---------- 1. Score: dot products ---------- */
+  function animDot(root) {
+    const ui = shell(root, "Step 1 · Score: dot products for “bank”", ["bank · bank", "bank · of", "bank · river"]);
+    let run = 0;
+
+    async function play() {
+      const id = ++run;
+      ui.stage.innerHTML = "";
+      const top = vectorRow("bank", X[0], "is-query");
+      const other = vectorRow("", [0, 0, 0, 0], "is-key");
+      const prod = vectorRow("×", ["", "", "", ""], "is-prod");
+      const result = el("div", "lq-scores");
+      result.append(el("span", "lq-row__label", "scores"));
+      const chips = el("div", "lq-chips");
+      WORDS.forEach((w) => {
+        const c = el("span", "lq-chip");
+        c.append(el("small", "", w), el("b", "", "?"));
+        chips.append(c);
+      });
+      result.append(chips);
+      ui.stage.append(top, other, prod, result);
+      ui.setStep(-1);
+
+      for (let t = 0; t < 3; t++) {
+        if (id !== run) return;
+        ui.setStep(t);
+        other.querySelector(".lq-row__label").textContent = WORDS[t];
+        const oc = other.querySelectorAll(".lq-cell");
+        X[t].forEach((v, j) => (oc[j].textContent = v));
+        prod.querySelectorAll(".lq-cell").forEach((c) => { c.textContent = ""; c.classList.remove("is-hot"); });
+        ui.caption.textContent = `Multiply “bank” and “${WORDS[t]}” position by position…`;
+        await sleep(500);
+        let total = 0;
+        for (let j = 0; j < 4; j++) {
+          if (id !== run) return;
+          const cols = [top, other, prod].map((r) => r.querySelectorAll(".lq-cell")[j]);
+          cols.forEach((c) => c.classList.add("is-focus"));
+          const p = X[0][j] * X[t][j];
+          total += p;
+          cols[2].textContent = p;
+          cols[2].classList.toggle("is-hot", p > 0);
+          await sleep(520);
+          cols.forEach((c) => c.classList.remove("is-focus"));
+        }
+        ui.caption.textContent = `…then add them up: bank · ${WORDS[t]} = ${total}`;
+        const chip = chips.children[t];
+        chip.querySelector("b").textContent = total;
+        chip.classList.add("is-done");
+        await sleep(1100);
+      }
+      ui.caption.textContent = "Scores for “bank”: 2 with itself, 0 with “of”, 1 with “river”.";
+    }
+    ui.replay.addEventListener("click", play);
+    return play;
+  }
+
+  /* ---------- 2. Normalize: softmax bars ---------- */
+  function animSoftmax(root) {
+    const ui = shell(root, "Step 2 · Normalize: softmax turns scores into percentages", ["scores", "e^score", "÷ sum = focus"]);
+    let run = 0;
+
+    async function play() {
+      const id = ++run;
+      ui.stage.innerHTML = "";
+      const chart = el("div", "lq-bars");
+      const bars = WORDS.map((w) => {
+        const col = el("div", "lq-bar");
+        const val = el("span", "lq-bar__val", "");
+        const track = el("div", "lq-bar__track");
+        const fill = el("div", "lq-bar__fill");
+        track.append(fill);
+        col.append(val, track, el("span", "lq-bar__label", w));
+        chart.append(col);
+        return { val, fill };
+      });
+      const total = el("p", "lq-bars__total", "");
+      ui.stage.append(chart, total);
+      const set = (heights, labels, max) =>
+        bars.forEach((b, i) => {
+          b.fill.style.height = `${(heights[i] / max) * 100}%`;
+          b.val.textContent = labels[i];
+        });
+
+      set([0, 0, 0], ["", "", ""], 1);
+      ui.setStep(-1);
+      await sleep(300);
+      if (id !== run) return;
+
+      ui.setStep(0);
+      set(SCORES, SCORES.map(String), 8);
+      ui.caption.textContent = "Raw scores for “bank”: 2, 0, 1. They don’t add up to anything useful yet.";
+      total.textContent = "";
+      await sleep(2000);
+      if (id !== run) return;
+
+      ui.setStep(1);
+      set(EXP, EXP.map((v) => v.toFixed(3)), 8);
+      ui.caption.textContent = "Raise e (≈2.718) to each score. Everything becomes positive, and big scores grow faster.";
+      total.textContent = `Sum = ${SUM.toFixed(3)}`;
+      await sleep(2400);
+      if (id !== run) return;
+
+      ui.setStep(2);
+      set(FOCUS, FOCUS.map((v) => (v * 100).toFixed(1) + "%"), 1);
+      ui.caption.textContent = "Divide each by the sum. “bank” focuses 66.5% on itself, 24.5% on “river”, 9% on “of”.";
+      total.textContent = "Total = 100%";
+    }
+    ui.replay.addEventListener("click", play);
+    return play;
+  }
+
+  /* ---------- 3. Mix: blend vectors into the new "bank" ---------- */
+  function animMix(root) {
+    const ui = shell(root, "Step 3 · Mix: blend the words using the focus", ["weigh each word", "add them up", "new “bank”"]);
+    let run = 0;
+    const heat = (cell, v) => {
+      cell.style.setProperty("--heat", Math.min(1, v));
+      cell.classList.toggle("is-zero", v < 1e-9);
+    };
+
+    async function play() {
+      const id = ++run;
+      ui.stage.innerHTML = "";
+      const rows = WORDS.map((w, i) => {
+        const row = vectorRow(w, X[i], "is-mix");
+        const weight = el("span", "lq-weight", `× ${FOCUS[i].toFixed(3)}`);
+        row.append(weight);
+        row.querySelectorAll(".lq-cell").forEach((c, j) => heat(c, X[i][j]));
+        ui.stage.append(row);
+        return row;
+      });
+      const line = el("div", "lq-sumline");
+      ui.stage.append(line);
+      const out = vectorRow("new bank", [0, 0, 0, 0], "is-out");
+      out.querySelectorAll(".lq-cell").forEach((c) => { c.textContent = ""; heat(c, 0); });
+      ui.stage.append(out);
+      const before = el("p", "lq-before", "before: [1, 0, 1, 0]");
+      ui.stage.append(before);
+      ui.setStep(-1);
+      ui.caption.textContent = "Each row of the focus matrix is a recipe: how much of each word to take.";
+      await sleep(1500);
+      if (id !== run) return;
+
+      ui.setStep(0);
+      for (let i = 0; i < 3; i++) {
+        if (id !== run) return;
+        rows[i].classList.add("is-active");
+        rows[i].querySelectorAll(".lq-cell").forEach((c, j) => {
+          const v = X[i][j] * FOCUS[i];
+          c.textContent = fmt(v);
+          heat(c, v);
+        });
+        ui.caption.textContent = `Take ${(FOCUS[i] * 100).toFixed(1)}% of “${WORDS[i]}”.`;
+        await sleep(1000);
+        rows[i].classList.remove("is-active");
+      }
+      if (id !== run) return;
+
+      ui.setStep(1);
+      ui.caption.textContent = "Add the three weighted rows, column by column.";
+      const oc = out.querySelectorAll(".lq-cell");
+      for (let j = 0; j < 4; j++) {
+        if (id !== run) return;
+        rows.forEach((r) => r.querySelectorAll(".lq-cell")[j].classList.add("is-focus"));
+        oc[j].textContent = NEW_BANK[j].toFixed(3);
+        heat(oc[j], NEW_BANK[j]);
+        oc[j].classList.add("is-focus");
+        await sleep(650);
+        rows.forEach((r) => r.querySelectorAll(".lq-cell")[j].classList.remove("is-focus"));
+        oc[j].classList.remove("is-focus");
+      }
+      if (id !== run) return;
+
+      ui.setStep(2);
+      [1, 3].forEach((j) => oc[j].classList.add("is-new"));
+      before.classList.add("is-shown");
+      ui.caption.textContent = "Positions 2 and 4 were 0. Now they carry information from “river” and “of”: “bank” has absorbed context.";
+    }
+    ui.replay.addEventListener("click", play);
+    return play;
+  }
+
+  /* ---------- 4. Playground: edit the words, everything recomputes ---------- */
+  function playground(root) {
+    root.classList.add("lq-play");
+    root.innerHTML = "";
+    const D = 4;
+    const DEFAULT = { words: ["bank", "of", "river"], X: [[1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 0, 0]] };
+    let state = { words: [...DEFAULT.words], X: DEFAULT.X.map((r) => [...r]), sharp: 1, scale: false, sel: 0 };
+
+    const head = el("div", "lq-anim__head");
+    const t = el("span", "lq-anim__title");
+    t.append(el("span", "lq-badge lq-badge--play", "✎ Interactive"), document.createTextNode("Attention playground"));
+    head.append(t);
+    const reset = el("button", "lq-anim__btn", "↺ Reset");
+    reset.type = "button";
+    head.append(reset);
+
+    const howto = el("p", "lq-play__howto");
+    howto.innerHTML = "<strong>Your turn:</strong> click any number below and type a new one (or use ↑ ↓), rename a word, or move the slider. Everything recalculates instantly.";
+    const inputs = el("div", "lq-play__inputs");
+    const controls = el("div", "lq-play__controls");
+    const sharpLabel = el("label", "lq-play__control");
+    const sharpText = el("span", "", "");
+    const sharp = el("input");
+    Object.assign(sharp, { type: "range", min: "0.25", max: "3", step: "0.25", value: "1" });
+    sharp.setAttribute("aria-label", "Sharpness");
+    sharpLabel.append(sharpText, sharp);
+    const scaleLabel = el("label", "lq-play__control lq-play__check");
+    const scale = el("input");
+    scale.type = "checkbox";
+    scaleLabel.append(scale, el("span", "", "Divide scores by √d (d = 4)"));
+    const shuffle = el("button", "lq-anim__btn", "⇄ Shuffle word order");
+    shuffle.type = "button";
+    controls.append(sharpLabel, scaleLabel, shuffle);
+
+    const panels = el("div", "lq-play__panels");
+    const pS = el("div", "lq-play__panel"), pA = el("div", "lq-play__panel"), pY = el("div", "lq-play__panel");
+    panels.append(pS, pA, pY);
+    const recipe = el("p", "lq-play__recipe");
+    recipe.setAttribute("aria-live", "polite");
+    const hint = el("p", "lq-play__hint",
+      "Try this: change “of” to [1, 0, 0, 0] so it shares a feature with “bank”, and watch how much attention it now gets.");
+    root.append(head, howto, inputs, controls, panels, recipe, hint);
+    let touched = false;
+    root.addEventListener("input", () => {
+      if (!touched) { touched = true; root.classList.add("is-touched"); }
+    });
+
+    const heatCell = (v, max, extra = "") => {
+      const c = el("span", "lq-cell lq-play__cell " + extra, fmt(v, 2));
+      c.style.setProperty("--heat", max > 0 ? Math.min(1, Math.abs(v) / max) : 0);
+      if (v < 0) c.classList.add("is-neg");
+      return c;
+    };
+
+    function grid(panel, title, note, rowLabels, colLabels, M, opts = {}) {
+      panel.innerHTML = "";
+      panel.append(el("p", "lq-play__ptitle", title));
+      const g = el("div", "lq-play__grid");
+      g.style.gridTemplateColumns = `auto repeat(${colLabels.length}, minmax(0, 1fr))`;
+      g.append(el("span", ""));
+      colLabels.forEach((c) => g.append(el("span", "lq-play__col", c)));
+      const max = Math.max(1e-9, ...M.flat().map(Math.abs));
+      M.forEach((row, i) => {
+        const lab = el("button", "lq-play__row" + (i === state.sel ? " is-sel" : ""), rowLabels[i]);
+        lab.type = "button";
+        lab.addEventListener("click", () => { state.sel = i; render(); });
+        g.append(lab);
+        row.forEach((v, j) => {
+          const extra = (i === state.sel ? "is-selrow " : "") + (opts.changed && opts.changed(i, j) ? "is-new" : "");
+          g.append(heatCell(v, opts.max || max, extra));
+        });
+      });
+      panel.append(g, el("p", "lq-play__note", note));
+    }
+
+    function buildInputs() {
+      inputs.innerHTML = "";
+      state.words.forEach((w, i) => {
+        const row = el("div", "lq-play__wrow");
+        const name = el("input", "lq-play__name");
+        Object.assign(name, { type: "text", value: w, maxLength: 10 });
+        name.setAttribute("aria-label", `Word ${i + 1} name`);
+        name.addEventListener("input", () => { state.words[i] = name.value.trim() || `word ${i + 1}`; render(false); });
+        row.append(name);
+        for (let j = 0; j < D; j++) {
+          const n = el("input", "lq-play__num");
+          Object.assign(n, { type: "number", min: "-3", max: "3", step: "1", value: state.X[i][j] });
+          n.setAttribute("aria-label", `${w}, number ${j + 1}`);
+          n.addEventListener("input", () => {
+            const v = parseFloat(n.value);
+            state.X[i][j] = Number.isFinite(v) ? Math.max(-3, Math.min(3, v)) : 0;
+            render(false);
+          });
+          row.append(n);
+        }
+        inputs.append(row);
+      });
+    }
+
+    function render(rebuild = true) {
+      if (rebuild) buildInputs();
+      const { X: M, words } = state;
+      const n = M.length;
+      const S = M.map((a) => M.map((b) => a.reduce((s, v, k) => s + v * b[k], 0)));
+      const factor = state.sharp / (state.scale ? Math.sqrt(D) : 1);
+      const A = S.map((row) => {
+        const z = row.map((v) => v * factor);
+        const m = Math.max(...z);
+        const e = z.map((v) => Math.exp(v - m));
+        const sum = e.reduce((a, b) => a + b, 0);
+        return e.map((v) => v / sum);
+      });
+      const Y = A.map((row) => [...Array(D).keys()].map((j) => row.reduce((s, w, i) => s + w * M[i][j], 0)));
+      sharpText.textContent = `Sharpness × ${state.sharp}`;
+      grid(pS, "1 · Scores", "Dot product of each pair. Bigger = more similar.", words, words, S);
+      grid(pA, "2 · Focus (softmax)", "Each row adds up to 100%.", words, words, A, { max: 1 });
+      grid(pY, "3 · New vectors", "Amber outline: a 0 that became non-zero (new context).", words,
+        ["1", "2", "3", "4"], Y, { changed: (i, j) => M[i][j] === 0 && Math.abs(Y[i][j]) > 0.005 });
+      const r = A[state.sel];
+      recipe.innerHTML = "";
+      recipe.append(el("strong", "", `new ${words[state.sel]} = `));
+      recipe.append(document.createTextNode(r.map((w, i) => `${(w * 100).toFixed(1)}% ${words[i]}`).join(" + ")));
+      recipe.append(el("span", "lq-play__tip", "  (click a word in the grids to see its recipe)"));
+    }
+
+    sharp.addEventListener("input", () => { state.sharp = parseFloat(sharp.value); render(false); });
+    scale.addEventListener("change", () => { state.scale = scale.checked; render(false); });
+    shuffle.addEventListener("click", () => {
+      const order = [...state.words.keys()];
+      do { order.sort(() => Math.random() - 0.5); } while (order.every((v, i) => v === i));
+      const selWord = state.words[state.sel];
+      state.words = order.map((i) => state.words[i]);
+      state.X = order.map((i) => state.X[i]);
+      state.sel = state.words.indexOf(selWord);
+      render();
+      hint.textContent = `New order: “${state.words.join(" ")}”. Each word’s focus and new vector are exactly the same as before, just listed in a different row. Self-attention ignores word order; positional encoding fixes that.`;
+    });
+    reset.addEventListener("click", () => {
+      state = { words: [...DEFAULT.words], X: DEFAULT.X.map((r) => [...r]), sharp: 1, scale: false, sel: 0 };
+      sharp.value = "1";
+      scale.checked = false;
+      hint.textContent = "Try this: change “of” to [1, 0, 0, 0] so it shares a feature with “bank”, and watch how much attention it now gets.";
+      render();
+    });
+    render();
+    return () => {};
+  }
+
+  /* ---------- Wire up ---------- */
+  const MAKERS = { dot: animDot, softmax: animSoftmax, mix: animMix, playground };
+  const io = "IntersectionObserver" in window
+    ? new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting && !e.target.dataset.played) {
+            e.target.dataset.played = "1";
+            e.target._play();
+          }
+        });
+      }, { threshold: 0.45 })
+    : null;
+
+  document.querySelectorAll(".lq-anim[data-anim]").forEach((root) => {
+    const make = MAKERS[root.dataset.anim];
+    if (!make) return;
+    root._play = make(root);
+    if (io && !reduced) io.observe(root);
+    else root._play();
+  });
+})();

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learn AI, step by step · LatentQuest</title>
+  <meta name="description" content="Free articles that explain how modern AI works with small examples you can follow by hand: attention, transformers, BERT, Vision Transformers and more.">
+  <link rel="canonical" href="https://latentquest.ai/learn/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://latentquest.ai/learn/">
+  <meta property="og:title" content="Learn AI, step by step">
+  <meta property="og:description" content="Free articles that explain how modern AI works with small examples you can follow by hand: attention, transformers, BERT, Vision Transformers and more.">
+  <meta property="og:image" content="https://latentquest.ai/assets/img/og-latentquest-v2.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0a6fd6">
+  <link rel="icon" href="../assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/img/favicon-48.png" sizes="48x48" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script>
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+    } catch (e) {}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Learn AI, step by step",
+  "url": "https://latentquest.ai/learn/",
+  "hasPart": [
+    {
+      "@type": "TechArticle",
+      "headline": "Self-Attention Explained with Real Numbers",
+      "url": "https://latentquest.ai/learn/self-attention-explained/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <header class="nav is-scrolled">
+    <div class="container nav__inner">
+      <a class="brand" href="../" aria-label="Home">
+        <img class="brand__logo" src="../assets/img/logo-tile-96.png" alt="" width="34" height="34">
+        <span class="brand__text">LatentQuest</span>
+      </a>
+      <nav class="nav__links" aria-label="Primary">
+        <a href="../#course">Courses</a>
+        <a href="../learn/">Learn</a>
+        <a href="../#demo">Try attention</a>
+        <a href="../#code">Free code</a>
+        <a href="../#instructors">Instructors</a>
+      </nav>
+      <div class="nav__actions">
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1.5 12h3M19.5 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+        </button>
+        <a class="btn btn--primary btn--sm nav__cta" href="https://www.udemy.com/course/master-transformers-from-scratch-bert-vit-ai-search/?referralCode=741D2251A98D41859FB9" target="_blank" rel="noopener">Enroll</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="article">
+    <div class="container">
+      <p class="kicker">Learn</p>
+      <h1 class="learn-title">Understand the AI you build with</h1>
+      <p class="section__lead">Free, step-by-step explanations with numbers you can check. Each one comes with runnable code.</p>
+      
+        <section class="learn-hub">
+          <h2>Transformers</h2>
+          <div class="learn-grid">
+          <a class="learn-card" href="self-attention-explained/">
+            <span class="learn-card__meta">Sessions 1–2 · 12 min read</span>
+            <h3>Self-Attention Explained with Real Numbers</h3>
+            <p>How does a transformer know that &quot;bank&quot; means a riverbank? Compute self-attention by hand on a three-word example, step by step, with numbers you can check. No advanced math needed.</p>
+            <span class="learn-card__more">Read →</span>
+          </a>
+          </div>
+        </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> LatentQuest · Mohammad R. Khalili Shoja &amp; Seyed Vahid Mirnezami</p>
+      <nav aria-label="Footer">
+        <a href="../learn/">Learn</a>
+        <a href="https://www.linkedin.com/company/latentquest" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/LatentQuest" target="_blank" rel="noopener">GitHub</a>
+        <a href="../coupon/">Coupons</a>
+      </nav>
+    </div>
+  </footer>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        const next = root.dataset.theme === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try { localStorage.setItem("theme", next); } catch (e) {}
+      });
+      document.getElementById("year").textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>

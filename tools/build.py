@@ -179,9 +179,10 @@ def course_jsonld(site):
     return json.dumps(data, ensure_ascii=False, indent=2)
 
 
-def write_sitemap():
+def write_sitemap(articles=()):
     today = datetime.date.today().isoformat()
-    pages = [("", "1.0"), ("coupon/", "0.5")]
+    pages = [("", "1.0"), ("learn/", "0.8"), ("coupon/", "0.5")]
+    pages += [(f"learn/{a['slug']}/", "0.7") for a in articles]
     urls = "\n".join(
         f"  <url>\n    <loc>{SITE_URL}{p}</loc>\n    <lastmod>{today}</lastmod>\n    <priority>{prio}</priority>\n  </url>"
         for p, prio in pages
@@ -218,8 +219,12 @@ def main():
 
     INDEX.write_text(source)
 
-    # 3. Sitemap.
-    write_sitemap()
+    # 3. Articles under /learn/, then the sitemap.
+    sys.path.insert(0, str(ROOT / "tools"))
+    import articles as article_builder
+    built = article_builder.build()
+    write_sitemap(built)
+    print("Built", len(built), "article(s) under learn/")
     print("Pre-rendered:", ", ".join(PRERENDER_IDS))
     print("Wrote index.html, sitemap.xml")
 
