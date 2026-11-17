@@ -152,7 +152,7 @@ All three come from the same sentence, so the sentence is paying attention to *i
 
 ## What self-attention can't do (yet)
 
-**It ignores word order.** The dot product doesn't care where a word sits. "dog bites man" and "man bites dog" contain the same words, so they get exactly the same scores. Transformers fix this by adding **positional encoding**: a small pattern added to each word's vector that marks its position. ([See an experiment where this makes the difference between 50% and 100% accuracy.](https://github.com/seyedvahidmirnezami/transformer-encoder-pytorch))
+**It ignores word order.** The dot product doesn't care where a word sits. "dog bites man" and "man bites dog" contain the same words, so they get exactly the same scores. Transformers fix this by adding **positional encoding**: a small pattern added to each word's vector that marks its position. ([See an experiment where this makes the difference between 50% and 100% accuracy.](https://github.com/LatentQuest/transformer-encoder-pytorch))
 
 **It can't learn.** In everything above, the focus percentages were completely fixed by the starting vectors. But different tasks need different kinds of focus: sometimes "bank" should look at "river" for meaning, and sometimes at "of" for grammar. The fix is to give each of the three roles its own learnable transformation. These are the famous **query, key and value** matrices, and adding them gives the attention used in real transformers:
 
@@ -176,7 +176,7 @@ Now it's your turn. Change any number below, or rename the words, and every step
 
 {{anim:playground}}
 
-- **Code:** the same calculation in NumPy and PyTorch, with tests that check every number in this article → [self-attention-from-scratch on GitHub](https://github.com/seyedvahidmirnezami/self-attention-from-scratch)
+- **Code:** the same calculation in NumPy and PyTorch, with tests that check every number in this article → [self-attention-from-scratch on GitHub](https://github.com/LatentQuest/self-attention-from-scratch)
 
 Here's the whole calculation in a few lines of NumPy (a Python library for working with tables of numbers):
 

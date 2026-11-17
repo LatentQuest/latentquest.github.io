@@ -174,7 +174,7 @@
 <ul><li>The first X <strong>asks</strong>: "how similar am I to everyone?"</li><li>The second X (transposed) <strong>answers</strong>: "here are my features for comparison."</li><li>The third X is the <strong>content</strong> being blended.</li></ul>
 <p>All three come from the same sentence, so the sentence is paying attention to <em>itself</em>.</p>
 <h2 id="what-self-attention-can-t-do-yet">What self-attention can't do (yet)</h2>
-<p><strong>It ignores word order.</strong> The dot product doesn't care where a word sits. "dog bites man" and "man bites dog" contain the same words, so they get exactly the same scores. Transformers fix this by adding <strong>positional encoding</strong>: a small pattern added to each word's vector that marks its position. (<a href="https://github.com/seyedvahidmirnezami/transformer-encoder-pytorch" target="_blank" rel="noopener">See an experiment where this makes the difference between 50% and 100% accuracy.</a>)</p>
+<p><strong>It ignores word order.</strong> The dot product doesn't care where a word sits. "dog bites man" and "man bites dog" contain the same words, so they get exactly the same scores. Transformers fix this by adding <strong>positional encoding</strong>: a small pattern added to each word's vector that marks its position. (<a href="https://github.com/LatentQuest/transformer-encoder-pytorch" target="_blank" rel="noopener">See an experiment where this makes the difference between 50% and 100% accuracy.</a>)</p>
 <p><strong>It can't learn.</strong> In everything above, the focus percentages were completely fixed by the starting vectors. But different tasks need different kinds of focus: sometimes "bank" should look at "river" for meaning, and sometimes at "of" for grammar. The fix is to give each of the three roles its own learnable transformation. These are the famous <strong>query, key and value</strong> matrices, and adding them gives the attention used in real transformers:</p>
 <pre class="code"><code>Attention(Q, K, V) = softmax(Q · Kᵀ / √d) · V</code></pre>
 <p>Same three steps, score, normalize, mix, just on transformed versions of the words. The <strong>√d</strong> (the square root of the vector length) shrinks the scores slightly, because longer vectors produce bigger dot products, and very large scores make softmax put almost all the focus on a single word.</p>
@@ -183,7 +183,7 @@
 <h2 id="try-it-yourself">Try it yourself</h2>
 <p>Now it's your turn. Change any number below, or rename the words, and every step recalculates instantly.</p>
 <figure class="lq-anim" data-anim="playground" aria-label="Step-by-step animation"></figure>
-<ul><li><strong>Code:</strong> the same calculation in NumPy and PyTorch, with tests that check every number in this article → <a href="https://github.com/seyedvahidmirnezami/self-attention-from-scratch" target="_blank" rel="noopener">self-attention-from-scratch on GitHub</a></li></ul>
+<ul><li><strong>Code:</strong> the same calculation in NumPy and PyTorch, with tests that check every number in this article → <a href="https://github.com/LatentQuest/self-attention-from-scratch" target="_blank" rel="noopener">self-attention-from-scratch on GitHub</a></li></ul>
 <p>Here's the whole calculation in a few lines of NumPy (a Python library for working with tables of numbers):</p>
 <pre class="code"><code class="language-python">import numpy as np
 
